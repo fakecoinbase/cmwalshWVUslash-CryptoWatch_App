@@ -1,0 +1,47 @@
+.holdings-list {
+    // width: 50%;
+}
+
+.holding-label {
+    margin-bottom: 0px !important;
+}
+
+.holding-icon {
+    width: 26px;
+    height: 26px;
+}
+
+.holding-avatar {
+    margin-right: 4px;
+    width: 26px !important;
+}
+
+.holding-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.holdings-grid {
+    --ion-grid-padding: 10px;
+}
+
+.holding-col {
+    max-width: 150px !important;
+    --ion-grid-column-padding: 1px;
+}
+
+.holding-card {
+    display: flex;
+    flex-direction: row;
+    padding: 0px !important
+}
+
+ion-item {
+    --padding-start: 6px !important;
+    --padding-end: 0px !important;
+    --inner-padding-end: 0px !important;
+}
+
+.holdings-row {
+    justify-content: center;
+}
