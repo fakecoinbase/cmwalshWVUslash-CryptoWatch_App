@@ -1,1 +1,14 @@
 
+.update-email-form {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.account-button {
+    cursor: pointer;
+
+    &:hover {
+        --background: #363636 !important;
+    }
+}

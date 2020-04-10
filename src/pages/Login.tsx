@@ -44,7 +44,7 @@ const Login: React.FC<OwnProps> = (props, { }) => {
       if (res) {
         dispatch(setUserState(res.user))
         toast("You have logged in!")
-        props.history.push('/news', {direction: 'none'});
+        props.history.push('/holdings', {direction: 'none'});
       }
     }
     setLoading(false)

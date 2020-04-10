@@ -197,6 +197,7 @@
 .article-card {
     height: 100%;
     border: 1px solid #92B9FF;
+    margin: 1px;
 }
 
 .article-col {
@@ -245,7 +246,7 @@
     margin: 1px;
 }
 
-.ticker-col {
+.ticker-col, .article-col {
     padding: 2px;
 }
 

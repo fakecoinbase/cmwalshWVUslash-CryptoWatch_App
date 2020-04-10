@@ -1,9 +1,10 @@
 import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonItem, IonList, IonMenuButton } from "@ionic/react";
-import { signout } from "../firebase/firebase";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol } from "@ionic/react";
+import { signout, updateUsersEmail, updateUsersPassword } from "../firebase/firebase";
 import "./AccountsPage.scss"
+import { toast } from "../components/toast";
  
 interface OwnProps extends RouteComponentProps {}
 
@@ -23,31 +24,61 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
     const user = useSelector((state: any) => state.firebase.user)
     useEffect(() => {
         if (!user) {
-
             history.push("/landing")
-            // dispatch(setLoadingHoldings(true))
-            // getTopCryptos().then((resp) => {
-            //     dispatch(updateCurrentPrices(resp));
-            // }).catch(err => console.log(err));
-            // getDailyHoldingsHistory(user.uid).then((resp: any) => {
-            //     dispatch(setHoldingsHistory(resp))
-            // })
-            // getCoinbaseHoldings(user.uid).then((resp:any) => {
-            //     dispatch(setCoinbaseHoldings(resp))
-            // })
-            // getAdditionalHoldings(user.uid).then((resp:any) => {
-            //     dispatch(setAdditionalHoldings(resp))
-            // })
-            // dispatch(setLoadingHoldings(false))
         }
     }, []);
+
     const [showAlert, setShowAlert] = useState(false);
+    const [showEditPassword, setShowEditPassword] = useState(false);
+    const [updatedPassword, setUpdatedPassword] = useState("")
+    const [updatedPasswordConfirmed, setUpdatedPasswordConfirmed] = useState("")
+
+    const [showEditEmail, setShowEditEmail] = useState(false);
+    const [updatedEmail, setUpdatedEmail] = useState("")
+    const [updatedEmailConfirmed, setUpdatedEmailConfirmed] = useState("")
 
     const clicked = (text: string) => {
       console.log(`Clicked ${text}`);
     }
-  
-    console.log(user)
+
+    const updateEmail = async (e: React.FormEvent) => {
+      if (updatedEmail === "" || updatedEmailConfirmed === "") {
+        toast("Email cannot be blank!")
+        return
+      } else if (updatedEmail !== updatedEmailConfirmed) {
+        toast("Emails do not match!")
+        return
+      } else if(user.email !== updatedEmail) {
+        const res: any = await updateUsersEmail(updatedEmail)
+        if (res) {
+          toast("Email updated successfully")
+          setUpdatedEmail("")
+          setUpdatedEmailConfirmed("")
+        } else {
+          toast("Error updating email")
+        }
+      } else {
+        toast("Current and Updated email are the same")
+      }
+    }
+
+    const updatePassowrd = async (e: React.FormEvent) => {
+      if (updatedPassword === "" || updatedPasswordConfirmed === "") {
+        toast("Updated password is blank")
+      } else if(updatedPassword === updatedPasswordConfirmed) {
+        const res: any = await updateUsersPassword(updatedPassword)
+        if (res) {
+          toast("Password updated successfully")
+          setUpdatedPassword("")
+          setUpdatedPasswordConfirmed("")
+        } else {
+          toast("Password updating password")
+        }
+      } else {
+        toast("Passwords do not match")
+      }
+    }
+
     return (
       <IonPage id="account-page">
         <IonHeader>
@@ -65,10 +96,71 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
               <h2>{ user.name }</h2>
               <IonList inset>
                 <IonItem onClick={() => clicked('Update Picture')}>Update Picture</IonItem>
-                <IonItem onClick={() => setShowAlert(true)}>Change Username</IonItem>
-                <IonItem onClick={() => clicked('Change Password')}>Change Password</IonItem>
-                <IonItem routerLink="/support" routerDirection="none">Support</IonItem>
-                <IonItem onClick={() => signout()} routerLink="/landing" routerDirection="none">Logout</IonItem>
+                <IonItem className={"account-button"} onClick={() => {
+                  setUpdatedEmail("")
+                  setUpdatedEmailConfirmed("")
+                  setShowEditPassword(false)
+                  setShowEditEmail(!showEditEmail)
+                }}>
+                  Change Email
+                  </IonItem>
+                {
+                  showEditEmail ? 
+
+                  <IonCard className="ion-padding">
+                    <IonItem>
+                      <IonLabel position="stacked" color="primary">New Email</IonLabel>
+                      <IonInput name="currentEmail" type="text" value={updatedEmail} spellCheck={false} autocapitalize="off"  onIonChange={e => setUpdatedEmail(e.detail.value!)}>
+                      </IonInput>
+                    </IonItem> 
+                    <IonItem>
+                      <IonLabel position="stacked" color="primary">Confirm Email</IonLabel>
+                      <IonInput name="updatedEmail" type="text" value={updatedEmailConfirmed} spellCheck={false} autocapitalize="off" onIonChange={e => setUpdatedEmailConfirmed(e.detail.value!)}
+                        required>
+                      </IonInput>
+                    </IonItem> 
+
+                    <IonRow>
+                      <IonCol>
+                        <IonButton onClick={updateEmail} type="submit" expand="block">Update Email</IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonCard>
+                  : null
+                }
+                <IonItem className={"account-button"} onClick={() => {
+                  setUpdatedPassword("")
+                  setUpdatedPasswordConfirmed("")
+                  setShowEditEmail(false)
+                  setShowEditPassword(!showEditPassword)}}
+                  >
+                    Change Password
+                </IonItem>
+                {
+                  showEditPassword ? 
+
+                  <IonCard className="ion-padding">
+                    <IonItem>
+                      <IonLabel position="stacked" color="primary">New Password</IonLabel>
+                      <IonInput name="currentPassword" type="password" value={updatedPassword} spellCheck={false} autocapitalize="off" onIonChange={e => setUpdatedPassword(e.detail.value!)} >
+                      </IonInput>
+                    </IonItem> 
+                    <IonItem>
+                      <IonLabel position="stacked" color="primary">Confirm New Password</IonLabel>
+                      <IonInput name="updatedPassword" type="password" value={updatedPasswordConfirmed} spellCheck={false} autocapitalize="off" onIonChange={e => setUpdatedPasswordConfirmed(e.detail.value!)}
+                        required>
+                      </IonInput>
+                    </IonItem> 
+
+                    <IonRow>
+                      <IonCol>
+                        <IonButton onClick={updatePassowrd} type="submit" expand="block">Update Password</IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonCard>
+                  : null
+                }
+                <IonItem className={"account-button"} onClick={() => signout()} routerLink="/landing" routerDirection="none">Logout</IonItem>
               </IonList>
             </div>)
           }

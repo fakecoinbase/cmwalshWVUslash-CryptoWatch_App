@@ -65,21 +65,21 @@ const RoutingSystem: React.FC = () => {
           <Route path="/account" component={AccountPage} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab0" href={user !== null ? "/account" : "/landing"}>
-            <IonIcon icon={personOutline} />
-            <IonLabel>Account</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab1" href={user !== null ? "/holdings" : "/landing"}>
+          <IonTabButton tab="holdings" href={user !== null ? "/holdings" : "/landing"}>
             <IonIcon icon={cashOutline} />
             <IonLabel>Holdings</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/news">
+          <IonTabButton tab="news" href="/news">
             <IonIcon icon={newspaperOutline} />
             <IonLabel>News</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tickers" href="/tickers">
+          <IonTabButton  tab="tickers" href="/tickers">
             <IonIcon icon={statsChartOutline} />
             <IonLabel>Tickers</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="account" href={user !== null ? "/account" : "/landing"}>
+            <IonIcon icon={personOutline} />
+            <IonLabel>Account</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

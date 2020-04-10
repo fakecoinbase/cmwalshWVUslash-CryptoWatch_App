@@ -3,6 +3,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMe
 import './Login.scss';
 import { RouteComponentProps } from 'react-router';
 import { toast } from '../components/toast';
+import { registerUser } from '../firebase/firebase';
 
 
 interface OwnProps extends RouteComponentProps {}
@@ -54,12 +55,12 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
         password2: password2
       };
 
-    //   const res = await registerUser(newUser);
+      const res = await registerUser(newUser);
 
-    //   if (res) {
-    //     toast("Registration Success!", 4000)
-    //     props.history.push('/tabs/news', {direction: 'none'});
-    //   }
+      if (res) {
+        toast("Registration Success!", 4000)
+        props.history.push('/tabs/holdings', {direction: 'none'});
+      }
       setLoading(false)
     }
   };

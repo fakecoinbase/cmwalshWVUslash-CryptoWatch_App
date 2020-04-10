@@ -89,6 +89,32 @@ export async function getCurrentUser() {
   })
 }
 
+export function updateUsersEmail(email: string) {
+    var user = firebase.auth().currentUser;
+    if (user) {
+        user.updateEmail(email).then(response => {
+            toast("Email successfully updated.", 2000)
+            return true
+          }).catch(error => {
+            toast(error.message, 2000)
+            return false
+          });
+    }
+}
+
+export function updateUsersPassword(password: string) {
+    var user = firebase.auth().currentUser;
+    if (user) {
+        user.updatePassword(password).then(response => {
+            toast("Password successfully updated.", 2000)
+            return true
+          }).catch(error => {
+            toast(error.message, 2000)
+            return false
+          });
+    }
+}
+
 export async function getTopCryptos() {
 
     const top20 = firestore.collection('top').doc('top20').get()
