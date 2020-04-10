@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton, IonButton, IonIcon, getConfig, IonModal } from '@ionic/react';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonButton, IonIcon, getConfig, IonModal } from '@ionic/react';
 import { options } from 'ionicons/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCurrentPrices } from '../store/actions/currentPricesActions';
@@ -11,12 +11,8 @@ interface OwnProps { };
 
 const TickersPage: React.FC<OwnProps> = ({ }) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [segment, setSegment] = useState<'balances' | 'transactions'>('balances');
 
   const currentPrices:any[] = useSelector((state: any) => state.prices.currentPrices)
-  const lastUpdated:any = useSelector((state: any) => state.prices.lastUpdated)
-  const user:any = useSelector((state: any) => state.firebase.user)
-
   const mode = getConfig()!.get('mode')
 
   const dispatch = useDispatch()
@@ -27,10 +23,10 @@ const TickersPage: React.FC<OwnProps> = ({ }) => {
 
   }
 
-    useEffect(() => {
-        getTopCryptos().then((resp) => {
-            dispatch(updateCurrentPrices(resp));
-        }).catch(err => console.log(err));
+  useEffect(() => {
+    getTopCryptos().then((resp) => {
+        dispatch(updateCurrentPrices(resp));
+    }).catch(err => console.log(err));
   }, []);
 
   const [filteredTickers, setfilteredTickers] = useState(getTickers());

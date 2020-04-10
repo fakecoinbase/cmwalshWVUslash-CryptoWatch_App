@@ -11,7 +11,7 @@ import {
   IonSpinner
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { person, newspaper, statsChart, cash, logOut, cashOutline, personOutline, newspaperOutline, statsChartOutline } from 'ionicons/icons';
+import { cashOutline, personOutline, newspaperOutline, statsChartOutline } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';

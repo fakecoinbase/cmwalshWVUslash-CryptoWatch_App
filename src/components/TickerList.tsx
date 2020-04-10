@@ -1,8 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
-import moment from 'moment';
-import Pusher from 'pusher-js';
 import Ticker from './Ticker';
-import { IonSegment, IonSegmentButton, IonHeader, IonCard, IonCardContent, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton, IonList, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
+import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol } from '@ionic/react';
 import { useSelector } from 'react-redux';
 
 interface OwnProps {

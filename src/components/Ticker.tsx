@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../theme/card.scss';
-import moment from 'moment';
-import { IonCard, IonCardHeader, IonItem, IonCardContent, IonCardTitle, IonRow, IonCol, IonButton, IonIcon } from '@ionic/react';
-import { logoTwitter, arrowDown, arrowUp } from 'ionicons/icons';
+import { IonCard, IonCardContent, IonCardTitle, IonRow, IonCol } from '@ionic/react';
 import numbro from 'numbro'
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/core";
@@ -18,8 +16,6 @@ interface TickerProps {
 }
 
 const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
-    const [priceData, setPriceData] = useState([])
-    const [dataPoints, setDataPoints] = useState()
     const [chartOpen, setChartOpen] = useState(true)
 
     const prices = useSelector((state: any) => state.graphData[ticker])
@@ -30,12 +26,6 @@ const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
             dispatch(updateGraphData(resp, ticker))
         })
       }, []);
-
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2
-    })
 
     let icon = require(`cryptocurrency-icons/32/icon/generic.png`); 
     try {

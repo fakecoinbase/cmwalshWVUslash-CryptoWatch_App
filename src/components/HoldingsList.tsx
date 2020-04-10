@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Holding from "../models/Holding";
 import React from "react";
 import { useSelector } from "react-redux";
-import { IonCard, IonCardTitle, IonCardContent, IonList, IonItem, IonAvatar, IonLabel, IonNote, IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonList, IonItem, IonAvatar, IonLabel, IonGrid, IonRow, IonCol } from "@ionic/react";
 import numbro from "numbro";
 import "./HoldingsList.scss"
 

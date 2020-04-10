@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction } from 'react';
+import React, { useState } from 'react';
 import { IonItem, IonLabel, IonToggle, IonSegment, IonSegmentButton, IonContent, IonCard, IonTitle, IonInput, IonButton, IonIcon } from '@ionic/react';
 import './newTransactionDialog.scss'
 import { useSelector } from 'react-redux';

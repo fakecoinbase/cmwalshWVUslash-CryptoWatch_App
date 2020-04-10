@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../theme/card.scss';
-import { IonCard, IonButton } from '@ionic/react';
+import { IonCard } from '@ionic/react';
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/core";
 import Chart from 'react-apexcharts';

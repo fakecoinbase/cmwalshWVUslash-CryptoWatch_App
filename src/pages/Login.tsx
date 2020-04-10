@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText, IonLoading } from '@ionic/react';
 import './Login.scss';
 // import { signInWithFirebase, loadUserSession, setCurrentUser } from "../data/store/actions/authActions"
-import { RouteComponentProps, Redirect } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { toast } from '../components/toast';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../firebase/firebase';
@@ -21,13 +21,6 @@ const Login: React.FC<OwnProps> = (props, { }) => {
   const [loading, setLoading] = useState(false)
 
   const dispatch = useDispatch()
-
-//   useEffect(() => {
-//     // Update the document title using the browser API
-//     if (props.auth.isAuthenticated) {
-//       props.history.push('/tabs/news', {direction: 'none'});
-//     } 
-//   }, [props.auth]);
 
   const login = async (e: React.FormEvent) => {
     setLoading(true)
@@ -53,7 +46,6 @@ const Login: React.FC<OwnProps> = (props, { }) => {
         toast("You have logged in!")
         props.history.push('/news', {direction: 'none'});
       }
-      // await props.signInWithFirebase(user);
     }
     setLoading(false)
   };

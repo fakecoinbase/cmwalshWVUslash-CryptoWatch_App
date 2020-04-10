@@ -2,19 +2,7 @@ import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonItem, IonList, IonMenuButton } from "@ionic/react";
-import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout } from "../firebase/firebase";
-import numbro from "numbro";
-import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
-import Holding from "../models/Holding";
-import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList } from "../store/actions/coinbaseActions";
-import { updateCurrentPrices } from "../store/actions/currentPricesActions";
-import HoldingsChart from "../components/HoldingsChart";
-import HoldingsHistoryChart from "../components/HoldingsHistoryChart";
-import moment from 'moment'
-import { isPlatform } from "@ionic/core";
-import { add, logOut } from "ionicons/icons";
-import NewTransactionDialog from "../components/NewTransactionDialog";
-import HoldingsList from "../components/HoldingsList";
+import { signout } from "../firebase/firebase";
 import "./AccountsPage.scss"
  
 interface OwnProps extends RouteComponentProps {}
