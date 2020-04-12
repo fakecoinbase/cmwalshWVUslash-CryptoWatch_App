@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../theme/card.scss';
-import { IonCard } from '@ionic/react';
+import { IonCard, getConfig } from '@ionic/react';
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/core";
 import Chart from 'react-apexcharts';
@@ -15,6 +15,7 @@ const HoldingsChart: React.FC<HoldingsChartProps> = ({  }) => {
     const [holdingsMapping, setHoldingsMapping] = useState<any>({series: []})
     const  holdingsMap = useSelector((state:any) => state.coinbase.holdingsMap)
     const loadingHoldings = useSelector((state: any) => state.coinbase.loadingHoldings)
+    const mode = getConfig()!.get('mode')
 
     useEffect(() => {
         mapTickerHoldings()
@@ -117,7 +118,7 @@ const HoldingsChart: React.FC<HoldingsChartProps> = ({  }) => {
                 holdingsMap === undefined ?
                     noData
                 :
-                    <Chart options={holdingsMap.options} series={holdingsMap.series} type="pie" height={450} />
+                    <Chart options={holdingsMap.options} series={holdingsMap.series} type="pie"  />
             }
         </IonCard>
     )

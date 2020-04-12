@@ -350,15 +350,6 @@ const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
                         })}
                     </IonRow>
                 </IonCol>
-
-                <IonCol text-center >
-                    <IonRow className={"ticker-row"}>
-                        % Change (24h)
-                    </IonRow>
-                    <IonRow text-center className={"ticker-row-value"}>
-                        {crypto.quote.USD.percent_change_24h}%
-                    </IonRow>
-                </IonCol>
                 <IonCol text-left >
                     <IonRow className={"ticker-row"}>
                         % Change (1h)

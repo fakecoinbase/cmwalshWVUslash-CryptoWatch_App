@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { IonCard, IonCardContent, IonContent, IonList, IonGrid, IonRow, IonCol } from '@ionic/react';
-import Article from './Article';
+import Article from './NewArticle';
 import Pusher from 'pusher-js';
 import pushid from 'unique-push-id';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,7 +58,7 @@ const ArticleList: React.FC<Props> = ({ news }) => {
                         return a.published_on < b.published_on ? 1 : -1
                     }
                 }).map((article, index)  => (
-                    <IonCol className="article-col" size="12" size-md="4" key={index}>
+                    <IonCol className="article-col" size="12" size-md="3" key={index}>
                         <Article key={index} article={article} id={pushid()} />
                     </IonCol>
                     )

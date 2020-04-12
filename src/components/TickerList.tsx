@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Ticker from './Ticker';
 import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol } from '@ionic/react';
 import { useSelector } from 'react-redux';
@@ -10,15 +10,13 @@ interface OwnProps {
 
 const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
     const [segment, setSegment] = useState<'list' | 'cards'>('cards');
-    const [data, setData] = useState([]);
+    const data:any[] = [];
     const [tickers, setTickers] = useState<any>([]);
 
     const currentPrices: any[] = useSelector((state:any) => state.prices.currentPrices)
     const lastUpdated = useSelector((state: any) => state.prices.lastUpdated)
     useEffect(() => {
-    
         var tickerData = currentPrices == null ? data : currentPrices.filter((coin: any) => coin.cmc_rank <= 20);
-        
         console.log(filteredTickerList)
         const t = tickerData.map((currency: any, index: number) => {
             if(filteredTickerList.indexOf(currency.symbol) > -1) {

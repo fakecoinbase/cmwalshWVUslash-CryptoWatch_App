@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonItem, IonLabel, IonToggle, IonSegment, IonSegmentButton, IonContent, IonCard, IonTitle, IonInput, IonButton, IonIcon } from '@ionic/react';
+import { IonItem, IonLabel, IonToggle, IonSegment, IonSegmentButton, IonContent, IonInput, IonButton } from '@ionic/react';
 import './newTransactionDialog.scss'
 import { useSelector } from 'react-redux';
 import { recordTransaction } from '../firebase/firebase';

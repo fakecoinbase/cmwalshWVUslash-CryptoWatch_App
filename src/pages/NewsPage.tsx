@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton } from '@ionic/react';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton, IonRefresher, IonRefresherContent } from '@ionic/react';
 import ArticleList from '../components/ArticleList';
+import { RefresherEventDetail } from '@ionic/core';
 
 interface OwnProps { };
 
@@ -16,10 +17,27 @@ const NewsPage: React.FC<SpeakerListProps> = ({}) => {
         fetch('https://mighty-dawn-74394.herokuapp.com/live')
             .then(response => response.json())
             .then(articles => {
+                console.log(articles)
+                // dispatch(updateN(articles.articles))
                 setNews(articles);
             }).catch(error => console.log(error)
         );
     }, [])
+
+    function refresh(event: CustomEvent<RefresherEventDetail>) {
+        fetch('https://mighty-dawn-74394.herokuapp.com/live')
+            .then(response => response.json())
+            .then(articles => {
+                console.log(articles)
+                // dispatch(updateN(articles.articles))
+                setNews(articles);
+                event.detail.complete();
+            }).catch(error => {
+                console.log(error)
+                event.detail.complete();
+            }
+        );
+    }
 
     return (
         <IonPage id="news-page">
@@ -33,6 +51,10 @@ const NewsPage: React.FC<SpeakerListProps> = ({}) => {
             </IonHeader>
 
             <IonContent className={`outer-content`}>
+                <IonRefresher slot="fixed" onIonRefresh={refresh}>
+                    <IonRefresherContent>
+                    </IonRefresherContent>
+                </IonRefresher>
                 <ArticleList news={news} />
             </IonContent>
         </IonPage>

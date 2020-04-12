@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent } from "@ionic/react";
 import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout } from "../firebase/firebase";
 import numbro from "numbro";
 import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
@@ -11,7 +11,7 @@ import { updateCurrentPrices } from "../store/actions/currentPricesActions";
 import HoldingsChart from "../components/HoldingsChart";
 import HoldingsHistoryChart from "../components/HoldingsHistoryChart";
 import moment from 'moment'
-import { isPlatform } from "@ionic/core";
+import { isPlatform, RefresherEventDetail } from "@ionic/core";
 import { add, logOut } from "ionicons/icons";
 import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
@@ -292,6 +292,29 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
         }
         return priceData
     }   
+
+    function refresh(event: CustomEvent<RefresherEventDetail>) {
+        if (user) {
+            dispatch(setLoadingHoldings(true))
+            getTopCryptos().then((resp) => {
+                dispatch(updateCurrentPrices(resp));
+            }).catch(err => console.log(err));
+            getDailyHoldingsHistory(user.uid).then((resp: any) => {
+                dispatch(setHoldingsHistory(resp))
+            })
+            getCoinbaseHoldings(user.uid).then((resp:any) => {
+                dispatch(setCoinbaseHoldings(resp))
+            })
+            getAdditionalHoldings(user.uid).then((resp:any) => {
+                dispatch(setAdditionalHoldings(resp))
+            })
+            dispatch(setLoadingHoldings(false))
+            event.detail.complete()
+        } else {
+            event.detail.complete()
+        }
+    }
+ 
     return (
         <IonPage id="landing-page">
             <IonHeader >
@@ -303,6 +326,9 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className={"ion-padding"}>
+                <IonRefresher slot="fixed" onIonRefresh={refresh}>
+                    <IonRefresherContent></IonRefresherContent>
+                </IonRefresher>
                 <IonCard className={"total-holdings ion-padding"}>
                 <IonCardTitle className="total-title">
                     Current Holdings: ${numbro(calculateTotalHoldings()).format({

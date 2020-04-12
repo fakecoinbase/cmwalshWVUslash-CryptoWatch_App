@@ -2,6 +2,14 @@
     // width: 50%;
 }
 
+.holdings-list-amount {
+    text-align: right;
+}
+
+.holding-list-label {
+    width: fit-content;
+}
+
 .holding-label {
     margin-bottom: 0px !important;
 }
@@ -12,13 +20,15 @@
 }
 
 .holding-avatar {
-    margin-right: 4px;
+    margin-right: 8px;
     width: 26px !important;
+    height: fit-content;
 }
 
 .holding-item {
     display: flex;
     flex-direction: row;
+    --padding-start: 16px !important;
 }
 
 .holdings-grid {

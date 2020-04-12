@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonCard, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol } from "@ionic/react";
 import { signout, updateUsersEmail, updateUsersPassword } from "../firebase/firebase";
 import "./AccountsPage.scss"
 import { toast } from "../components/toast";
@@ -10,17 +10,6 @@ interface OwnProps extends RouteComponentProps {}
 
 const AccountPage: React.FC<OwnProps> = ({ history }) => {
     
-    const mode = getConfig()!.get('mode')
-
-    const [showTransactionModal, setShowTransactionModal] = useState(false)
-
-    const holdingsHistory = useSelector((state: any) => state.firebase.holdingsHistory)
-    const currentPrices = useSelector((state: any) => state.prices.currentPrices)
-    const cbHoldings = useSelector((state: any) => state.coinbase.cbHoldings)
-    const additionalHoldings = useSelector((state: any) => state.coinbase.additionalHoldings)
-    const lastUpdated = useSelector((state: any) => state.coinbase.lastUpdated)
-    
-    const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
     useEffect(() => {
         if (!user) {
@@ -28,7 +17,6 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
         }
     }, []);
 
-    const [showAlert, setShowAlert] = useState(false);
     const [showEditPassword, setShowEditPassword] = useState(false);
     const [updatedPassword, setUpdatedPassword] = useState("")
     const [updatedPasswordConfirmed, setUpdatedPasswordConfirmed] = useState("")
