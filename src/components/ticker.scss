@@ -17,3 +17,22 @@
         color: #d94040;
     }
 }
+
+.ticker-item-chart {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .holdings-list-amount {
+        height: fit-content;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 0px;
+    }
+}
+
+.full-screen-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}

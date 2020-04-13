@@ -9,7 +9,7 @@ interface OwnProps {
 
 
 const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
-    const [segment, setSegment] = useState<'list' | 'cards'>('cards');
+    const [segment, setSegment] = useState<'list' | 'cards'>('list');
     const data:any[] = [];
     const [tickers, setTickers] = useState<any>([]);
 

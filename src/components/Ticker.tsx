@@ -401,19 +401,19 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                                 name: ticker
                             }]} />
                     }
-                </IonLabel>
-                <IonLabel className={"holdings-list-amount"}>
-                    <div>
-                        ${numbro(crypto.quote.USD.price).format({
-                            thousandSeparated: true,
-                            mantissa: 2,
-                        })}
-                    </div>
-                    <div className={"priceChange"}>
-                        (<div className={`${crypto.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}> {numbro(crypto.quote.USD.percent_change_24h).format({
-                                average: true,
+                    <div className={"holdings-list-amount"}>
+                        <div>
+                            ${numbro(crypto.quote.USD.price).format({
+                                thousandSeparated: true,
                                 mantissa: 2,
-                            })}%</div>)
+                            })}
+                        </div>
+                        <div className={"priceChange"}>
+                            (<div className={`${crypto.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}> {numbro(crypto.quote.USD.percent_change_24h).format({
+                                    average: true,
+                                    mantissa: 2,
+                                })}%</div>)
+                        </div>
                     </div>
                 </IonLabel>
                 
