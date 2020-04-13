@@ -35,6 +35,9 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                                 <div>
                                     {holding.currentPrice.name}
                                 </div>
+                                <p>
+                                    {holding.ticker}
+                                </p>
                             </IonLabel>
                             <IonLabel className={"holdings-list-amount"}>
                                 <div>
@@ -43,9 +46,12 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                                         mantissa: 2,
                                     })}
                                 </div>
-                                <p>{numbro(holding.amount).format({
+                                <p>
+                                    {numbro(holding.amount).format({
                                             thousandSeparated: true
-                                        })} {holding.ticker}</p>
+                                        })
+                                    } 
+                                </p>
                             </IonLabel>
                         </IonItem>
                     )

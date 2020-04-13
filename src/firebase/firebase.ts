@@ -120,7 +120,7 @@ export async function getTopCryptos() {
     const top20 = firestore.collection('top').doc('top20').get()
         .then(doc => {
             if (!doc.exists) {
-                return axios.get('https://mighty-dawn-74394.herokuapp.com//top')
+                return axios.get('https://mighty-dawn-74394.herokuapp.com/top')
                     .then(response => {
                         return response.data.data
                     }).catch(error => {
@@ -134,19 +134,16 @@ export async function getTopCryptos() {
         })
         .catch(err => {
             console.log(err)
-            return axios.get('https://mighty-dawn-74394.herokuapp.com//top')
+            return axios.get('https://mighty-dawn-74394.herokuapp.com/top')
                 .then(response => {
                     return response.data.data
                 }).catch(error => console.log(error)
         );            
     });
-
     return top20
 }
 
 export async function getDailyHoldingsHistory(userId: string) {
-
-    console.log(userId)
     const top20 = firestore.collection('dailyHoldings').doc(userId).collection("holdingsHistory").orderBy('lastUpdated', 'desc').get()
         .then(res => {
             const history:any[] = []
@@ -163,14 +160,23 @@ export async function getDailyHoldingsHistory(userId: string) {
 }
 
 export async function getHistoricalCyrptoPrices(ticker: string) {
-
-    console.log(ticker)
     const priceHistory = firestore.collection('priceData').doc("priceHistory").collection(ticker).orderBy('timeStamp', 'desc').limit(100).get()
-        .then(res => {
-            const history:any[] = []
-            res.forEach(r => {
-                history.push(r.data())
-            })
+        .then(async res => {
+            let history:any[] = []
+
+            if (res.empty) {
+                history = await axios.get(`https://mighty-dawn-74394.herokuapp.com/history?ticker=${ticker}`)
+                    .then(response => {
+                        return response.data.Data
+                    }).catch(error => {
+                        console.log(error)
+                        return []
+                    });
+            } else {
+                res.forEach(r => {
+                    history.push(r.data())
+                })
+            }
             return history
         })
         .catch(err => {

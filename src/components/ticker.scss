@@ -1,0 +1,19 @@
+.ticker-item-chart {
+    margin: 0px !important;
+}
+
+
+.priceChange {
+    display: flex;
+    font-size: 14px;
+    width: fit-content;
+    margin-right: 0px !important;
+    margin-left: auto;
+
+    .positive {
+        color: #009e74;
+    }
+    .negative {
+        color: #d94040;
+    }
+}

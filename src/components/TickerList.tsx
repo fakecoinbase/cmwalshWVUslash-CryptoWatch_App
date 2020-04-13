@@ -17,12 +17,12 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
     const lastUpdated = useSelector((state: any) => state.prices.lastUpdated)
     useEffect(() => {
         var tickerData = currentPrices == null ? data : currentPrices.filter((coin: any) => coin.cmc_rank <= 20);
-        console.log(filteredTickerList)
+        // console.log(filteredTickerList)
         const t = tickerData.map((currency: any, index: number) => {
             if(filteredTickerList.indexOf(currency.symbol) > -1) {
                 return (
                     <IonCol className={"ticker-col"} size="12" size-md="4" key={index}>
-                        <Ticker id={index} ticker={currency.symbol} crypto={currency} />
+                        <Ticker useCards={true} id={index} ticker={currency.symbol} crypto={currency} />
                     </IonCol>
                 )
             }
@@ -35,22 +35,23 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
     
         if (segment === 'cards') {
             const t = tickerData.map((currency: any, index: number) => {
-                if (segment === 'cards') {
-                    if (filteredTickerList.indexOf(currency.symbol) > -1) {
-                        return (
-                            <IonCol className={"ticker-col"} size="12" size-md="3" key={index}>
-                                <Ticker id={index} ticker={currency.symbol} crypto={currency} />
-                            </IonCol>
-                        )
-                    }
+                if (filteredTickerList.indexOf(currency.symbol) > -1) {
+                    return (
+                        <IonCol className={"ticker-col"} size="12" size-md="3" key={index}>
+                            <Ticker useCards={true} id={index} ticker={currency.symbol} crypto={currency} />
+                        </IonCol>
+                    )
                 }
             })
             setTickers(t) 
         } else {
-            const t =
-                <IonCol size="12" size-md="3" key={1}>
-                    Coming Soon!
-                </IonCol>
+            const t = tickerData.map((currency: any, index: number) => {
+                if (filteredTickerList.indexOf(currency.symbol) > -1) {
+                    return (
+                        <Ticker useCards={false} key={index} id={index} ticker={currency.symbol} crypto={currency} />
+                    )
+                }
+            })
             setTickers(t)
         }   
     }, [segment, currentPrices, filteredTickerList]);
@@ -65,13 +66,17 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                 Cards
                 </IonSegmentButton>
             </IonSegment>
-            <IonList className={"default-background"}>
             <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
-                <IonGrid fixed className={"ticker-grid"}>
-                <IonRow align-items-stretch>
-                    {currentPrices == null ? noData : tickers}
-                </IonRow>
-                </IonGrid>
+            <IonList className={"ion-padding default-background"}>
+                { segment === 'cards' ? 
+                    <IonGrid fixed className={"ticker-grid"}>
+                        <IonRow align-items-stretch>
+                            {currentPrices === null ? noData : tickers}
+                        </IonRow>
+                    </IonGrid>
+                :
+                    currentPrices === null ? noData : tickers
+            }
             </IonList>
         </IonContent>
     );

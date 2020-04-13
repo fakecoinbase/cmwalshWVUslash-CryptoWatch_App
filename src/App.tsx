@@ -104,11 +104,11 @@ const App: React.FC = () => {
   }, []);
 
   return (
-  <IonApp className={'dark-theme'} >
-     <div className="body">
-        {busy ? <IonSpinner /> : <RoutingSystem />}
-      </div>
-  </IonApp>
+    <IonApp className={'dark-theme'} >
+      <div className="body">
+          {busy ? <IonSpinner /> : <RoutingSystem />}
+        </div>
+    </IonApp>
   )
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../theme/card.scss';
-import { IonCard, IonCardContent, IonCardTitle, IonRow, IonCol } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardTitle, IonRow, IonCol, IonItem, IonAvatar, IonLabel } from '@ionic/react';
 import numbro from 'numbro'
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/core";
@@ -8,14 +8,16 @@ import Chart from 'react-apexcharts';
 import { getHistoricalCyrptoPrices } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGraphData } from '../store/actions/graphActions';
+import './ticker.scss';
 
 interface TickerProps { 
     crypto: any;
     id: any;
     ticker: string;
+    useCards: boolean;
 }
 
-const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
+const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
     const [chartOpen, setChartOpen] = useState(true)
 
     const prices = useSelector((state: any) => state.graphData[ticker])
@@ -83,7 +85,7 @@ const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
             },
             stroke: {
               curve: 'smooth',  
-              width: 3
+              width: 2
             },
             yaxis: {
                 floating:true,
@@ -93,7 +95,7 @@ const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
                         colors: '#2E93fA'
                     },
                     align: 'right',
-                    show: true,
+                    show: false,
                     formatter: function (value: any) {
                         if (value < .5) {
                             return "$" + numbro(value).format({
@@ -240,10 +242,17 @@ const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
             // console.log(`foreach ${prices.Data}`)
             try {
                 prices.forEach((record: any) => {
-                    var obj: any = {};
-                    obj.x = new Date(record.price.time * 1000).toLocaleString();
-                    obj.y = [record.price.close];
-                    data.push(obj);               
+                    if (record.price) {
+                        var obj: any = {};
+                        obj.x = new Date(record.price.time * 1000).toLocaleString();
+                        obj.y = [record.price.close];
+                        data.push(obj);            
+                    } else {
+                        var obj: any = {};
+                        obj.x = new Date(record.time * 1000).toLocaleString();
+                        obj.y = [record.close];
+                        data.push(obj);            
+                    }
                 });
                 priceData.push({data});
             } catch {
@@ -272,96 +281,145 @@ const Ticker: React.FC<TickerProps> = ({ ticker, crypto, id }) => {
         border-color: red;
     `;
     const s = series()
-  return (
-    <IonCard className="ticker">
-        <IonCardContent className="ticker-card-content grey-text text-darken-3">
-            <IonCardTitle className={"ticker-name"} >
-                <img className={"icon"} src={icon}/> {crypto.name} 
-                {/* <div className={"trading-pair"} > 
-                    ({crypto.symbol}/USD)
-                </div> */}
-                {/* <div className={"trading-pair"} > 
-                    Rank: {crypto.rank}
-                </div> */}
-                <div className={"priceFlex"}>
-                <div className={"price"} > 
-                    ${numbro(crypto.quote.USD.price).format({
-                            average: true,
-                            mantissa: 2,
-                        })}
-                </div>
-                <div className={"priceChange"}>
-                    (<div className={`${crypto.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}> {numbro(crypto.quote.USD.percent_change_24h).format({
-                            average: true,
-                            mantissa: 2,
-                        })}%</div>)
-                </div>
 
-                </div>
-                {/* {chartOpen ? <ExpandMore className={"ticker-collapse"} onClick={() => setChartOpen(false)}/>
-                            : <ExpandLess className={"ticker-collapse"} onClick={() => setChartOpen(true)} />
-                        } */}
-                {/* <div className={"ticker-rank"}>Rank: {crypto.rank}</div> */}
-            </IonCardTitle>
-            <IonCardContent className="chart-content">
-            { chartOpen ? 
-                <div className="chart">
+
+    if (useCards) {
+        return (
+            <IonCard className="ticker">
+                <IonCardContent className="ticker-card-content grey-text text-darken-3">
+                    <IonCardTitle className={"ticker-name"} >
+                        <img className={"icon"} src={icon}/> {crypto.name} 
+                        {/* <div className={"trading-pair"} > 
+                            ({crypto.symbol}/USD)
+                        </div> */}
+                        {/* <div className={"trading-pair"} > 
+                            Rank: {crypto.rank}
+                        </div> */}
+                        <div className={"priceFlex"}>
+                        <div className={"price"} > 
+                            ${numbro(crypto.quote.USD.price).format({
+                                    average: true,
+                                    mantissa: 2,
+                                })}
+                        </div>
+                        <div className={"priceChange"}>
+                            (<div className={`${crypto.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}> {numbro(crypto.quote.USD.percent_change_24h).format({
+                                    average: true,
+                                    mantissa: 2,
+                                })}%</div>)
+                        </div>
+
+                        </div>
+                        {/* {chartOpen ? <ExpandMore className={"ticker-collapse"} onClick={() => setChartOpen(false)}/>
+                                    : <ExpandLess className={"ticker-collapse"} onClick={() => setChartOpen(true)} />
+                                } */}
+                        {/* <div className={"ticker-rank"}>Rank: {crypto.rank}</div> */}
+                    </IonCardTitle>
+                    <IonCardContent className="chart-content">
+                        <div className="chart">
+                            { prices === undefined || prices.length < 1 ?  
+                                <ClipLoader
+                                    css={override}
+                                    size={150}
+                                    //size={"150px"} this also works
+                                    color={"#339989"}
+                                    loading={true}
+                                />
+                                :
+                                <Chart height={150} options={options()} type="line" 
+                                    series={[{
+                                        data: series()[0].data,
+                                        name: ticker
+                                    }]} />
+                            }
+                        </div>
+                    </IonCardContent>
+                    <IonRow justify-content-center>
+                        <IonCol text-center >
+                            <IonRow className={"ticker-row"}>
+                                Market Cap
+                            </IonRow>
+                            <IonRow text-center className={"ticker-row-value"} >
+                                {/* { formatter.format(crypto.crypto.market_cap_usd)} */}
+                                ${ numbro(crypto.quote.USD.market_cap).format({
+                                    average: true,
+                                    mantissa: 2,
+                                })}
+
+                            </IonRow>
+                        </IonCol>
+                        <IonCol text-center >
+                            <IonRow className={"ticker-row"}>
+                                Volume (24h)
+                            </IonRow>
+                            <IonRow text-center className={"ticker-row-value"} >
+                                {/* {formatter.format(crypto.crypto['24h_volume_usd'])} */}
+                                ${ numbro(crypto.quote.USD["volume_24h"]).format({
+                                    average: true,
+                                    mantissa: 2,
+                                })}
+                            </IonRow>
+                        </IonCol>
+                        <IonCol text-left >
+                            <IonRow className={"ticker-row"}>
+                                % Change (1h)
+                            </IonRow>
+                            <IonRow text-center className={"ticker-row-value"}>
+                                {crypto.quote.USD.percent_change_1h}%
+                            </IonRow>
+                        </IonCol>
+                    </IonRow>
+                </IonCardContent>
+            </IonCard> 
+        );
+    } else {
+        return (
+            <IonItem className="holding-item">
+                <IonAvatar className={"holding-avatar"} slot="start">
+                    <img className={"holding-icon"} src={icon}/>
+                </IonAvatar>
+                <IonLabel className={"holding-list-label"}>
+                    <div>
+                        {crypto.name}
+                    </div>
+                    <p>
+                        {ticker}
+                    </p>
+                </IonLabel>
+                <IonLabel className={"ticker-item-chart"}>
                     { prices === undefined || prices.length < 1 ?  
                         <ClipLoader
                             css={override}
-                            size={150}
                             //size={"150px"} this also works
                             color={"#339989"}
                             loading={true}
                         />
                         :
-                        <Chart height={150} options={options()} type="line" 
+                        <Chart width={75} options={options()} type="line" 
                             series={[{
                                 data: series()[0].data,
                                 name: ticker
                             }]} />
                     }
-                </div>
-            : null }
-            </IonCardContent>
-            <IonRow justify-content-center>
-                <IonCol text-center >
-                    <IonRow className={"ticker-row"}>
-                        Market Cap
-                    </IonRow>
-                    <IonRow text-center className={"ticker-row-value"} >
-                        {/* { formatter.format(crypto.crypto.market_cap_usd)} */}
-                        ${ numbro(crypto.quote.USD.market_cap).format({
-                            average: true,
+                </IonLabel>
+                <IonLabel className={"holdings-list-amount"}>
+                    <div>
+                        ${numbro(crypto.quote.USD.price).format({
+                            thousandSeparated: true,
                             mantissa: 2,
                         })}
-
-                    </IonRow>
-                </IonCol>
-                <IonCol text-center >
-                    <IonRow className={"ticker-row"}>
-                        Volume (24h)
-                    </IonRow>
-                    <IonRow text-center className={"ticker-row-value"} >
-                        {/* {formatter.format(crypto.crypto['24h_volume_usd'])} */}
-                        ${ numbro(crypto.quote.USD["volume_24h"]).format({
-                            average: true,
-                            mantissa: 2,
-                        })}
-                    </IonRow>
-                </IonCol>
-                <IonCol text-left >
-                    <IonRow className={"ticker-row"}>
-                        % Change (1h)
-                    </IonRow>
-                    <IonRow text-center className={"ticker-row-value"}>
-                        {crypto.quote.USD.percent_change_1h}%
-                    </IonRow>
-                </IonCol>
-            </IonRow>
-        </IonCardContent>
-    </IonCard> 
-  );
+                    </div>
+                    <div className={"priceChange"}>
+                        (<div className={`${crypto.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}> {numbro(crypto.quote.USD.percent_change_24h).format({
+                                average: true,
+                                mantissa: 2,
+                            })}%</div>)
+                    </div>
+                </IonLabel>
+                
+            </IonItem>
+        )
+    }
 }
 
 export default Ticker
