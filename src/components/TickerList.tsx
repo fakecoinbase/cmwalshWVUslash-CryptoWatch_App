@@ -68,7 +68,7 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                 </IonSegmentButton>
             </IonSegment>
             <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
-            <IonList className={isPlatform("mobile") ? "default-background" : "ion-padding default-background"}>
+            <IonList className={isPlatform("mobile") ? "default-background" : "desktop-ticker-list default-background"}>
                 { segment === 'cards' ? 
                     <IonGrid fixed className={"ticker-grid"}>
                         <IonRow align-items-stretch>
@@ -76,7 +76,7 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                         </IonRow>
                     </IonGrid>
                 :
-                    <>
+                <>
                     <IonItem className="holding-item headers">
                         <IonLabel className={"ticker-list-label"}>
                             Name
@@ -89,7 +89,7 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                         </IonLabel>
                     </IonItem>
                     {currentPrices === null ? noData : tickers}
-                    </>
+                </>
             }
             </IonList>
         </IonContent>

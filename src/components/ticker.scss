@@ -2,6 +2,10 @@
     margin: 0px !important;
 }
 
+.desktop-ticker-list {
+    width: 60%;
+    margin: auto;
+}
 
 .priceChange {
     display: flex;
@@ -33,7 +37,7 @@
     flex-direction: row;
     justify-content: flex-end;
     overflow: visible !important;
-    
+
     .holdings-list-amount {
         height: fit-content;
         margin-top: auto;
