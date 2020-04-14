@@ -368,7 +368,10 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                                 % Change (1h)
                             </IonRow>
                             <IonRow text-center className={tickerRowValue}>
-                                {crypto.quote.USD.percent_change_1h}%
+                                {numbro(crypto.quote.USD.percent_change_1h).format({
+                                    average: true,
+                                    mantissa: 2,
+                                })}%
                             </IonRow>
                         </IonCol>
                     </IonRow>
