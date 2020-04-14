@@ -349,7 +349,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                     <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
                 </IonCard>
                 <HoldingsList total={calculateTotalHoldings()} />
-                <div className={isPlatform('ios') || isPlatform('android') ? "" : "flex"}>
+                <div className={isPlatform('mobile') ? "" : "flex"}>
                     <HoldingsHistoryChart total={calculateTotalHoldings()} 
                         series={series()[0].data} 
                         options={options()} />
