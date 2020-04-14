@@ -17,23 +17,19 @@ const NewsPage: React.FC<SpeakerListProps> = ({}) => {
         fetch('https://mighty-dawn-74394.herokuapp.com/live')
             .then(response => response.json())
             .then(articles => {
-                console.log(articles)
                 // dispatch(updateN(articles.articles))
                 setNews(articles);
-            }).catch(error => console.log(error)
-        );
+            }).catch(error => console.log(error));
     }, [])
 
     function refresh(event: CustomEvent<RefresherEventDetail>) {
         fetch('https://mighty-dawn-74394.herokuapp.com/live')
             .then(response => response.json())
             .then(articles => {
-                console.log(articles)
                 // dispatch(updateN(articles.articles))
                 setNews(articles);
                 event.detail.complete();
             }).catch(error => {
-                console.log(error)
                 event.detail.complete();
             }
         );

@@ -26,7 +26,6 @@ const TickersFilter: React.FC<OwnProps> = ({ setfilteredTickers, filteredTickerL
     setfilteredTickers([...tickerList]);
   };
 
-  console.log(tickerList)
   return (
     <>
       <IonHeader>

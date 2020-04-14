@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Ticker from './Ticker';
 import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol } from '@ionic/react';
 import { useSelector } from 'react-redux';
+import './ticker.scss'
 
 interface OwnProps {
     filteredTickerList: any[]

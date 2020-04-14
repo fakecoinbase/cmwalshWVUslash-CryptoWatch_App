@@ -74,14 +74,7 @@ const Routes: React.FC = () => {
 const MenuApp: React.FC = () => {
   return (
     <IonReactRouter>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>HODL Watch</IonTitle>
-          <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      
       <Menu />
       <Routes />
     </IonReactRouter>

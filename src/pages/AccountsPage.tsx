@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonCard, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol, IonToggle } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonCard, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol, IonToggle, isPlatform } from "@ionic/react";
 import { signout, updateUsersEmail, updateUsersPassword } from "../firebase/firebase";
 import "./AccountsPage.scss"
 import { toast } from "../components/toast";
@@ -73,14 +73,22 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
 
     return (
       <IonPage id="account-page">
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
-            </IonButtons>
-            <IonTitle>Account</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        {isPlatform("mobile") ? 
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Account</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          :
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>HODL Watch</IonTitle>
+              <IonButtons slot="start">
+                  <IonMenuButton></IonMenuButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+        }
         <IonContent>
           {user &&
             (<div className="ion-padding-top ion-text-center">

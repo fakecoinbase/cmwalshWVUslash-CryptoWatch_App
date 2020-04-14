@@ -62,8 +62,6 @@ import { setUseDarkMode } from '../store/actions/userActions';
           </IonMenuToggle>
         ));
     }
-
-    console.log("Opening")
   
     return (
       <IonMenu type="reveal" contentId="main">

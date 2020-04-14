@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonButton, IonIcon, getConfig, IonModal, IonMenuButton } from '@ionic/react';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonButton, IonIcon, getConfig, IonModal, IonMenuButton, isPlatform } from '@ionic/react';
 import { options } from 'ionicons/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCurrentPrices } from '../store/actions/currentPricesActions';
@@ -38,23 +38,32 @@ const TickersPage: React.FC<OwnProps> = ({ }) => {
 
   return (
     <IonPage id="news-page">
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Current Prices</IonTitle>
-
-          {/* <IonTitle>Current Prices</IonTitle> */}
-          <IonButtons slot="end">
-            <IonButton onClick={() => setShowFilterModal(!showFilterModal)}>
-              {mode === 'ios' ? 'Filter' : <IonIcon icon={options} slot="icon-only" />}
-            </IonButton>
-            <IonButton>
-              <IonMenuButton ></IonMenuButton>
-
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
+       {isPlatform("mobile") ? 
+          <IonHeader>
+              <IonToolbar>
+                  <IonTitle>Current Prices</IonTitle>
+                  <IonButtons slot="end">
+                    <IonButton onClick={() => setShowFilterModal(!showFilterModal)}>
+                      {mode === 'ios' ? 'Filter' : <IonIcon icon={options} slot="icon-only" />}
+                    </IonButton>
+                  </IonButtons>
+              </IonToolbar>
+          </IonHeader>
+          :
+          <IonHeader>
+              <IonToolbar>
+                  <IonTitle>HODL Watch</IonTitle>
+                  <IonButtons slot="start">
+                      <IonMenuButton></IonMenuButton>
+                  </IonButtons>
+                  <IonButtons slot="end">
+                    <IonButton onClick={() => setShowFilterModal(!showFilterModal)}>
+                      {mode === 'ios' ? 'Filter' : <IonIcon icon={options} slot="icon-only" />}
+                    </IonButton>
+                  </IonButtons>
+              </IonToolbar>
+          </IonHeader>
+      }
       <IonContent className={`outer-content`}>
       
       <TickerList filteredTickerList={filteredTickers} />

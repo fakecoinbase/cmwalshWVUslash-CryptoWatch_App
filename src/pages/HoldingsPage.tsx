@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton } from "@ionic/react";
 import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout } from "../firebase/firebase";
 import numbro from "numbro";
 import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
@@ -107,8 +107,6 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
             dispatch(setHoldingsList(holdingsList))
         }
 
-
-        console.log(holdingsList)
         var total = 0 
         for (let i = 0; i < holdingsList.length; i ++) {
             let asset = holdingsList[i]
@@ -321,14 +319,22 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
  
     return (
         <IonPage id="landing-page">
-            <IonHeader >
-                <IonToolbar>
-                    <IonTitle>Holdings</IonTitle>
-                    <IonButtons slot="end">
-                        <IonButton onClick={() => logOut()}>Log Out</IonButton>
-                    </IonButtons>
-                </IonToolbar>
-            </IonHeader>
+            {isPlatform("mobile") ? 
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Holdings</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                :
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>HODL Watch</IonTitle>
+                        <IonButtons slot="start">
+                            <IonMenuButton></IonMenuButton>
+                        </IonButtons>
+                    </IonToolbar>
+                </IonHeader>
+            }
             <IonContent className={"ion-padding"}>
                 <IonRefresher slot="fixed" onIonRefresh={refresh}>
                     <IonRefresherContent></IonRefresherContent>
