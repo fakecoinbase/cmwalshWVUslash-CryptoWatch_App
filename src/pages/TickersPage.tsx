@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonButton, IonIcon, getConfig, IonModal } from '@ionic/react';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonButton, IonIcon, getConfig, IonModal, IonMenuButton } from '@ionic/react';
 import { options } from 'ionicons/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCurrentPrices } from '../store/actions/currentPricesActions';
@@ -46,6 +46,10 @@ const TickersPage: React.FC<OwnProps> = ({ }) => {
           <IonButtons slot="end">
             <IonButton onClick={() => setShowFilterModal(!showFilterModal)}>
               {mode === 'ios' ? 'Filter' : <IonIcon icon={options} slot="icon-only" />}
+            </IonButton>
+            <IonButton>
+              <IonMenuButton ></IonMenuButton>
+
             </IonButton>
           </IonButtons>
         </IonToolbar>

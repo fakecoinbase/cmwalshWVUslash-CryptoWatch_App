@@ -57,17 +57,17 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
     }, [segment, currentPrices, filteredTickerList]);
 
     return (
-        <IonContent className="tickers">
+        <IonContent className="ion-padding tickers">
             <IonSegment value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
                 <IonSegmentButton value="list" >
-                List
+                    List
                 </IonSegmentButton>
                 <IonSegmentButton value="cards" >
-                Cards
+                    Cards
                 </IonSegmentButton>
             </IonSegment>
             <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
-            <IonList className={"ion-padding default-background"}>
+            <IonList className={segment === "cards" ? "default-background" : "ion-padding default-background"}>
                 { segment === 'cards' ? 
                     <IonGrid fixed className={"ticker-grid"}>
                         <IonRow align-items-stretch>

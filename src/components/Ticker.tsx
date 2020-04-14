@@ -9,6 +9,7 @@ import { getHistoricalCyrptoPrices } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGraphData } from '../store/actions/graphActions';
 import './ticker.scss';
+import { isPlatform } from '@ionic/core';
 
 interface TickerProps { 
     crypto: any;
@@ -282,8 +283,10 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
     `;
     const s = series()
 
+    const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
     if (useCards) {
+        const tickerRowValue = useDarkMode ? "ticker-row-value-dark" : "ticker-row-value"
         return (
             <IonCard className="ticker">
                 <IonCardContent className="ticker-card-content grey-text text-darken-3">
@@ -339,7 +342,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                             <IonRow className={"ticker-row"}>
                                 Market Cap
                             </IonRow>
-                            <IonRow text-center className={"ticker-row-value"} >
+                            <IonRow text-center className={tickerRowValue} >
                                 {/* { formatter.format(crypto.crypto.market_cap_usd)} */}
                                 ${ numbro(crypto.quote.USD.market_cap).format({
                                     average: true,
@@ -352,7 +355,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                             <IonRow className={"ticker-row"}>
                                 Volume (24h)
                             </IonRow>
-                            <IonRow text-center className={"ticker-row-value"} >
+                            <IonRow text-center className={tickerRowValue} >
                                 {/* {formatter.format(crypto.crypto['24h_volume_usd'])} */}
                                 ${ numbro(crypto.quote.USD["volume_24h"]).format({
                                     average: true,
@@ -364,7 +367,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                             <IonRow className={"ticker-row"}>
                                 % Change (1h)
                             </IonRow>
-                            <IonRow text-center className={"ticker-row-value"}>
+                            <IonRow text-center className={tickerRowValue}>
                                 {crypto.quote.USD.percent_change_1h}%
                             </IonRow>
                         </IonCol>
@@ -386,7 +389,9 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                         {ticker}
                     </p>
                 </IonLabel>
+                
                 <IonLabel className={"ticker-item-chart"}>
+                    
                     { prices === undefined || prices.length < 1 ?  
                         <ClipLoader
                             css={override}

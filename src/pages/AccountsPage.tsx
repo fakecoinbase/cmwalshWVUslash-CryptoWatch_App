@@ -1,10 +1,11 @@
 import { RouteComponentProps } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonCard, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonCard, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol, IonToggle } from "@ionic/react";
 import { signout, updateUsersEmail, updateUsersPassword } from "../firebase/firebase";
 import "./AccountsPage.scss"
 import { toast } from "../components/toast";
+import { setUseDarkMode } from "../store/actions/userActions";
  
 interface OwnProps extends RouteComponentProps {}
 
@@ -16,6 +17,9 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
             history.push("/landing")
         }
     }, []);
+
+    const dispatch = useDispatch()
+    const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
     const [showEditPassword, setShowEditPassword] = useState(false);
     const [updatedPassword, setUpdatedPassword] = useState("")
@@ -84,7 +88,7 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
               <h2>{ user.name }</h2>
               <IonList inset>
                 <IonItem onClick={() => clicked('Update Picture')}>Update Picture</IonItem>
-                <IonItem className={"account-button"} onClick={() => {
+                <IonItem className={useDarkMode ? "account-button" : "account-button-light"} onClick={() => {
                   setUpdatedEmail("")
                   setUpdatedEmailConfirmed("")
                   setShowEditPassword(false)
@@ -116,7 +120,7 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
                   </IonCard>
                   : null
                 }
-                <IonItem className={"account-button"} onClick={() => {
+                <IonItem className={useDarkMode ? "account-button" : "account-button-light"} onClick={() => {
                   setUpdatedPassword("")
                   setUpdatedPasswordConfirmed("")
                   setShowEditEmail(false)
@@ -148,7 +152,11 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
                   </IonCard>
                   : null
                 }
-                <IonItem className={"account-button"} onClick={() => signout()} routerLink="/landing" routerDirection="none">Logout</IonItem>
+                <IonItem>
+                  <IonLabel>Use Dark Theme</IonLabel>
+                  <IonToggle checked={useDarkMode} onClick={() => dispatch(setUseDarkMode(!useDarkMode))} />
+                </IonItem>
+                <IonItem className={useDarkMode ? "account-button" : "account-button-light"} onClick={() => signout()} routerLink="/landing" routerDirection="none">Logout</IonItem>
               </IonList>
             </div>)
           }

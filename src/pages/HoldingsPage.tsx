@@ -30,7 +30,8 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     const cbHoldings = useSelector((state: any) => state.coinbase.cbHoldings)
     const additionalHoldings = useSelector((state: any) => state.coinbase.additionalHoldings)
     const lastUpdated = useSelector((state: any) => state.coinbase.lastUpdated)
-    
+    const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
+
     const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
     useEffect(() => {
@@ -136,7 +137,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
           position: 'bottom',
           fontSize: '17px',
             labels: {
-                colors: ["#FFFFFF"],
+                colors: useDarkMode ? ["#FFFFFF"] : ["#000000"],
             }
         },
         tooltip: {
@@ -181,7 +182,9 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
             grid: {
                 show: false,
             },
-            legend: { 
+            legend: {
+                show: false,
+                floating: true,
                 labels: {
                     color: "#000000",
                 }
@@ -239,7 +242,8 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
             xaxis: {
                 labels: {
                     style: {
-                        colors: '#C0C0C0'
+                        
+                        colors: useDarkMode ? '#C0C0C0' : '#000000'
                     },
                     formatter: function (value: any) {
                         return moment(value).format('l hh:mm a')

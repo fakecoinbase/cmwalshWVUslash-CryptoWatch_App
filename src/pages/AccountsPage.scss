@@ -12,3 +12,10 @@
         --background: #363636 !important;
     }
 }
+
+.account-button-light {
+    cursor: pointer;
+    &:hover {
+        --background: #C0C0C0 !important;
+    }
+}

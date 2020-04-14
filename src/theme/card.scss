@@ -224,11 +224,18 @@
     margin: auto;
 }
 
-.ticker-row-value {
+.ticker-row-value-dark {
     width: fit-content;
     margin: auto;
     font-weight: 600;
     color: white
+}
+
+.ticker-row-value {
+    width: fit-content;
+    margin: auto;
+    font-weight: 600;
+    color: black;
 }
 
 .chart-content {
@@ -236,7 +243,7 @@
 }
 
 .ticker-grid {
-    width: 95%;
+    // width: 95%;
 }
 
 .chart {

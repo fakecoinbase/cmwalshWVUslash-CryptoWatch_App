@@ -8,10 +8,17 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonSpinner
+  IonSpinner,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonMenuButton,
+  isPlatform
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { cashOutline, personOutline, newspaperOutline, statsChartOutline } from 'ionicons/icons';
+import { cashOutline, personOutline, newspaperOutline, statsChartOutline, menu } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -41,15 +48,56 @@ import NewsPage from './pages/NewsPage';
 import TickersPage from './pages/TickersPage';
 import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
+import Menu from './components/Menu';
+import MainTabs from './components/MainTabs';
 
 
-const RoutingSystem: React.FC = () => {
+const Routes: React.FC = () => {
+
+  return (
+    <IonRouterOutlet id="main">
+      <Route path="/landing" component={LandingPage} exact={true} />
+      <Route path="/news" component={NewsPage} />
+      <Route path="/" render={() => <Redirect to="/news" />} exact={true} />
+      <Route path="/login" component={Login} />
+      <Route path="/logout" render={() => {
+          signout()
+          return <Redirect exact to={"/landing"} />
+        }
+      } />
+      <Route path="/signup" component={Signup} />
+      <Route path="/tickers" component={TickersPage} />
+      <Route path="/holdings" component={HoldingsPage} />
+      <Route path="/account" component={AccountPage} />
+    </IonRouterOutlet>
+  )
+}
+
+const MenuApp: React.FC = () => {
+  return (
+    <IonReactRouter>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>HODL Watch</IonTitle>
+          <IonButtons slot="start">
+              <IonMenuButton></IonMenuButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <Menu />
+      <Routes />
+    </IonReactRouter>
+  )
+}
+
+
+const TabsApp: React.FC = () => {
   const user = useSelector((state: any) => state.firebase.user)
 
   return (
     <IonReactRouter>
       <IonTabs>
-        <IonRouterOutlet>
+        <IonRouterOutlet id="main">
           <Route path="/landing" component={LandingPage} exact={true} />
           <Route path="/news" component={NewsPage} />
           <Route path="/" render={() => <Redirect to="/news" />} exact={true} />
@@ -90,6 +138,7 @@ const RoutingSystem: React.FC = () => {
 const App: React.FC = () => {
   const [busy, setBusy] = useState(true)
   const dispatch = useDispatch() 
+  const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
   useEffect(() => {
     getCurrentUser().then(user => {
@@ -104,9 +153,12 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <IonApp className={'dark-theme'} >
+    <IonApp className={useDarkMode ? 'dark-theme' : 'light-mode'} >
       <div className="body">
-          {busy ? <IonSpinner /> : <RoutingSystem />}
+      
+          {busy ? <IonSpinner /> : 
+            isPlatform("mobile") ? 
+              <TabsApp/> : <MenuApp/>}
         </div>
     </IonApp>
   )

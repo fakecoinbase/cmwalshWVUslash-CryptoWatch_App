@@ -2,7 +2,7 @@ import { useState } from "react";
 import Holding from "../models/Holding";
 import React from "react";
 import { useSelector } from "react-redux";
-import { IonList, IonItem, IonAvatar, IonLabel, IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonList, IonItem, IonAvatar, IonLabel, IonGrid, IonRow, IonCol, IonCard } from "@ionic/react";
 import numbro from "numbro";
 import "./HoldingsList.scss"
 import { isPlatform } from "@ionic/core";
@@ -17,7 +17,7 @@ const HoldingsList: React.FC<Props> = ({total}) => {
     const holdingsList = useSelector((state: any) => state.coinbase.holdingsList)
 
     const buildList = () => {
-        if (isPlatform('ios') || isPlatform('android')) {
+        if (isPlatform('mobile')) {
             return (
                 holdingsList.map((holding: Holding, index: number) => {
                     let icon = require(`cryptocurrency-icons/32/icon/generic.png`); 
@@ -70,7 +70,8 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                             }
                             return (
                                 <IonCol className="holding-col" size="6" size-md="2" key={index}>
-                                    <IonItem className="holding-card">
+                                    <IonCard className={"holding-card"}>
+                                    <IonItem >
                                         <IonAvatar className={"holding-avatar"} slot="start">
                                             <img className={"holding-icon"} src={icon}/>
                                         </IonAvatar>
@@ -93,6 +94,7 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                                             <p>AMT: {holding.amount} </p>
                                         </IonLabel>
                                     </IonItem>
+                                    </IonCard>
                                 </IonCol>
                             )
                         })
