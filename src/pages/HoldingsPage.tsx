@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
 import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout } from "../firebase/firebase";
 import numbro from "numbro";
 import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
@@ -24,6 +24,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     const mode = getConfig()!.get('mode')
 
     const [showTransactionModal, setShowTransactionModal] = useState(false)
+    const [segment, setSegment] = useState<"list" | "charts">("list")
 
     const holdingsHistory = useSelector((state: any) => state.firebase.holdingsHistory)
     const currentPrices = useSelector((state: any) => state.prices.currentPrices)
@@ -340,21 +341,48 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                     <IonRefresherContent></IonRefresherContent>
                 </IonRefresher>
                 <IonCard className={"total-holdings ion-padding"}>
-                <IonCardTitle className="total-title">
-                    Current Holdings: ${numbro(calculateTotalHoldings()).format({
-                                thousandSeparated: true,
-                                mantissa: 2,
-                            })}
-                </IonCardTitle>
-                    <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
+                    <IonCardTitle className="total-title">
+                        Current Holdings: ${numbro(calculateTotalHoldings()).format({
+                                    thousandSeparated: true,
+                                    mantissa: 2,
+                                })}
+                    </IonCardTitle>
+                    <div className={"last-updated-time"}>
+                        Last Updated: {lastUpdated.format("llll")}
+                    </div>
                 </IonCard>
-                <HoldingsList total={calculateTotalHoldings()} />
-                <div className={isPlatform('mobile') ? "" : "flex"}>
-                    <HoldingsHistoryChart total={calculateTotalHoldings()} 
-                        series={series()[0].data} 
-                        options={options()} />
-                    <HoldingsChart/>
-                </div>
+                {isPlatform("mobile") ?
+                    <IonSegment value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
+                        <IonSegmentButton value="list" >
+                            List
+                        </IonSegmentButton>
+                        <IonSegmentButton value="charts" >
+                            Charts
+                        </IonSegmentButton>
+                    </IonSegment>
+                    : null
+                }
+                {!isPlatform("mobile") ?
+                    <>
+                        <HoldingsList total={calculateTotalHoldings()} />
+                        <div className={isPlatform('mobile') ? "" : "flex"}>
+                            <HoldingsHistoryChart total={calculateTotalHoldings()}
+                                series={series()[0].data}
+                                options={options()} />
+                            <HoldingsChart/>
+                        </div>
+                    </>
+                    :
+                    segment === "list" ?
+                    <HoldingsList total={calculateTotalHoldings()} />
+                    :
+                    <div className={isPlatform('mobile') ? "" : "flex"}>
+                        <HoldingsHistoryChart total={calculateTotalHoldings()}
+                            series={series()[0].data}
+                            options={options()} />
+                        <HoldingsChart/>
+                    </div>
+                }
             </IonContent>
             <IonModal
                 isOpen={showTransactionModal}

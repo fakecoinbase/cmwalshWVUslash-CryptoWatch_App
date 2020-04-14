@@ -38,6 +38,20 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                                 <p>
                                     {holding.ticker}
                                 </p>
+                                <div className={"name"}>
+                                    ${numbro(holding.currentPrice.quote.USD.price).format({
+                                        thousandSeparated: true,
+                                        mantissa: 2,
+                                    })}
+                                    <div className={"ticker-priceChange"}>
+                                        (<div className={`${holding.currentPrice.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}>
+                                            {numbro(holding.currentPrice.quote.USD.percent_change_24h).format({
+                                                average: true,
+                                                mantissa: 2,
+                                            })}%
+                                        </div>)
+                                    </div>
+                                </div>
                             </IonLabel>
                             <IonLabel className={"holdings-list-amount"}>
                                 <div>
@@ -77,9 +91,14 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                                         </IonAvatar>
 
                                         <IonLabel className={"holding-label"}>
-                                            <div>
-                                                {/* <img className={"icon"} src={icon}/> */}
+                                            <div className={"name"}>
                                                 {holding.ticker}
+                                                <div className={"ticker-priceChange"}>
+                                                    (<div className={`${holding.currentPrice.quote.USD.percent_change_24h >= 0 ? "positive" : "negative"}`}> {numbro(holding.currentPrice.quote.USD.percent_change_24h).format({
+                                                            average: true,
+                                                            mantissa: 2,
+                                                        })}%</div>)
+                                                </div>
                                             </div>
                                             <div>
                                                 ${numbro(Number(holding.currentPrice.quote.USD.price) * Number(holding.amount)).format({
@@ -87,11 +106,13 @@ const HoldingsList: React.FC<Props> = ({total}) => {
                                                     mantissa: 2,
                                                 })}
                                             </div>
-                                            <h3>Cur: ${numbro(holding.currentPrice.quote.USD.price).format({
-                                                thousandSeparated: true,
-                                                mantissa: 2,
-                                            })}</h3>
-                                            <p>AMT: {holding.amount} </p>
+                                            <h3>
+                                                ${numbro(holding.currentPrice.quote.USD.price).format({
+                                                    thousandSeparated: true,
+                                                    mantissa: 2,
+                                                })}
+                                            </h3>
+                                            <p>{holding.amount} </p>
                                         </IonLabel>
                                     </IonItem>
                                     </IonCard>

@@ -14,6 +14,26 @@
     margin-bottom: 0px !important;
 }
 
+.name {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    .ticker-priceChange {
+        display: flex;
+        font-size: 12px;
+        width: fit-content;
+        padding-left: 6px;
+
+        .positive {
+            color: #009e74;
+        }
+        .negative {
+            color: #d94040;
+        }
+    }
+
+}
+
 .holding-icon {
     width: 26px;
     height: 26px;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Ticker from './Ticker';
-import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol, IonItem, IonLabel } from '@ionic/react';
+import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol, IonItem, IonLabel, isPlatform } from '@ionic/react';
 import { useSelector } from 'react-redux';
 import './ticker.scss'
 
@@ -10,7 +10,7 @@ interface OwnProps {
 
 
 const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
-    const [segment, setSegment] = useState<'list' | 'cards'>('list');
+    const [segment, setSegment] = useState<'list' | 'cards'>(isPlatform("mobile") ? 'list' : 'cards');
     const data:any[] = [];
     const [tickers, setTickers] = useState<any>([]);
 
@@ -68,7 +68,7 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                 </IonSegmentButton>
             </IonSegment>
             <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
-            <IonList className={segment === "cards" ? "default-background" : "ion-padding default-background"}>
+            <IonList className={isPlatform("mobile") ? "default-background" : "ion-padding default-background"}>
                 { segment === 'cards' ? 
                     <IonGrid fixed className={"ticker-grid"}>
                         <IonRow align-items-stretch>

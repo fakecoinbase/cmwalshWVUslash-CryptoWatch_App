@@ -114,7 +114,7 @@ const TabsApp: React.FC = () => {
           </IonTabButton>
           <IonTabButton  tab="tickers" href="/tickers">
             <IonIcon icon={statsChartOutline} />
-            <IonLabel>Tickers</IonLabel>
+            <IonLabel>Prices</IonLabel>
           </IonTabButton>
           <IonTabButton tab="account" href={user !== null ? "/account" : "/landing"}>
             <IonIcon icon={personOutline} />

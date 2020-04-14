@@ -21,7 +21,7 @@ import { setUseDarkMode } from '../store/actions/userActions';
   const routes = {
     appPages: [
       { title: 'News', path: '/news', icon: newspaperOutline },
-      { title: 'Tickers', path: '/tickers', icon: statsChartOutline },
+      { title: 'Current Prices', path: '/tickers', icon: statsChartOutline },
     ],
     loggedInPages: [
         { title: 'Holdings', path: '/holdings', icon: cashOutline },

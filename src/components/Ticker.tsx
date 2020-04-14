@@ -42,7 +42,9 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
         return {
             chart: {
                 type: 'line',
-                toolbar: { tools: { download: false } },
+                toolbar: {
+                    show: false,
+                    tools: { download: false } },
                 zoom: {
                     enabled: false
                 },
@@ -404,7 +406,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                             loading={true}
                         />
                         :
-                        <Chart width={125} options={options()} type="line" 
+                        <Chart options={options()} type="line" 
                             series={[{
                                 data: series()[0].data,
                                 name: ticker
