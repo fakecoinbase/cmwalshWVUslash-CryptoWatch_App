@@ -49,8 +49,6 @@ import TickersPage from './pages/TickersPage';
 import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
-import MainTabs from './components/MainTabs';
-
 
 const Routes: React.FC = () => {
 
