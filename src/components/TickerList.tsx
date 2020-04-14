@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Ticker from './Ticker';
-import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonSegment, IonSegmentButton, IonContent, IonList, IonGrid, IonRow, IonCol, IonItem, IonLabel } from '@ionic/react';
 import { useSelector } from 'react-redux';
 import './ticker.scss'
 
@@ -76,7 +76,20 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                         </IonRow>
                     </IonGrid>
                 :
-                    currentPrices === null ? noData : tickers
+                    <>
+                    <IonItem className="holding-item headers">
+                        <IonLabel className={"ticker-list-label"}>
+                            Name
+                        </IonLabel>
+                        <IonLabel className={"ticker-item-chart-title"}>
+                            1 Day Chart
+                        </IonLabel>
+                        <IonLabel className={"ticker-item-price"}>
+                            Price
+                        </IonLabel>
+                    </IonItem>
+                    {currentPrices === null ? noData : tickers}
+                    </>
             }
             </IonList>
         </IonContent>

@@ -19,6 +19,16 @@
 }
 
 .ticker-item-chart {
+
+    [type=line] {
+        max-width: 150px;
+        margin: auto;
+    }
+}
+
+.ticker-item-price {
+    max-width: 28%;
+    margin-right: 0px !important;
     display: flex !important;
     flex-direction: row;
     justify-content: flex-end;
@@ -28,6 +38,10 @@
         margin-top: auto;
         margin-bottom: auto;
         margin-right: 0px;
+
+        .price {
+            // font-size: 18px;
+        }
     }
 }
 
@@ -39,4 +53,23 @@
 
 .tickers {
     --padding-top: 0px;
+
+    .last-updated-time {
+        padding-top: 8px 
+    }
+}
+
+.ticker-item-chart-title {
+    text-align: center;
+}
+
+.ticker-list-label {
+    overflow: visible !important;
+    overflow-wrap: normal;
+    white-space: normal !important;
+    max-width: 21%;
+}
+
+.headers {
+
 }

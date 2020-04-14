@@ -52,8 +52,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                 menu: {
                     show: false
                 }
-            },
-                      
+            },   
             // colors: ['#909090'],
             // colors: [function(props: any) {
             //     console.log(props.w.config.series[0].data)
@@ -69,6 +68,8 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                 show: false,
             },
             tooltip: {
+                enabled: useCards,
+
                 x: {
                     show: false,
                 },
@@ -110,11 +111,11 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                     }
                 },
                 tooltip: {
-                    enabled: true,
+                    enabled: useCards,
                 }
             },
             xaxis: {
-                floating:true,
+                floating: true,
                 labels: {
                     show: false,
                     formatter: function (value: any) {
@@ -123,7 +124,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                 },
                 type: 'datetime',
                 tooltip: {
-                    enabled: true
+                    enabled: useCards
                 }
             },
           }
@@ -384,7 +385,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                 <IonAvatar className={"holding-avatar"} slot="start">
                     <img className={"holding-icon"} src={icon}/>
                 </IonAvatar>
-                <IonLabel className={"holding-list-label"}>
+                <IonLabel className={"ticker-list-label"}>
                     <div>
                         {crypto.name}
                     </div>
@@ -403,14 +404,16 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                             loading={true}
                         />
                         :
-                        <Chart width={75} options={options()} type="line" 
+                        <Chart width={125} options={options()} type="line" 
                             series={[{
                                 data: series()[0].data,
                                 name: ticker
                             }]} />
                     }
+                </IonLabel>
+                <IonLabel className={"ticker-item-price"}>
                     <div className={"holdings-list-amount"}>
-                        <div>
+                        <div className={"price"}>
                             ${numbro(crypto.quote.USD.price).format({
                                 thousandSeparated: true,
                                 mantissa: 2,
