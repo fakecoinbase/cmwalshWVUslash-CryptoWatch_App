@@ -38,7 +38,7 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
             const t = tickerData.map((currency: any, index: number) => {
                 if (filteredTickerList.indexOf(currency.symbol) > -1) {
                     return (
-                        <IonCol className={"ticker-col"} size="12" size-md="3" key={index}>
+                        <IonCol className={"ticker-col"} size="12" size-md="4" key={index}>
                             <Ticker useCards={true} id={index} ticker={currency.symbol} crypto={currency} />
                         </IonCol>
                     )
@@ -68,7 +68,7 @@ const TickerList: React.FC<OwnProps> = ({ filteredTickerList }) => {
                 </IonSegmentButton>
             </IonSegment>
             <div className={"last-updated-time"}>Last Updated: {lastUpdated.format("llll")}</div>
-            <IonList className={isPlatform("mobile") ? "default-background" : "desktop-ticker-list default-background"}>
+            <IonList className={isPlatform("mobile") || segment === "cards" ? "default-background" : "desktop-ticker-list default-background"}>
                 { segment === 'cards' ? 
                     <IonGrid fixed className={"ticker-grid"}>
                         <IonRow align-items-stretch>

@@ -6,7 +6,9 @@ const initData = {
     holdingsMap: undefined,
     loadingHoldings: true,
     lastUpdated: moment(),
-    holdingsList: []
+    holdingsList: [],
+    accessToken: null,
+    coinbaseAuth: false
 }
 
 const coinbaseReducer = ( state = initData, action: any ) => {
@@ -37,6 +39,16 @@ switch (action.type) {
             return {
                 ...state,
                 holdingsList: action.holdingsList
+            }
+    case 'SET_ACCESS_TOKEN':
+            return {
+                ...state,
+                accessToken: action.accessToken
+            }
+    case 'SET_COINBASE_AUTH':
+            return {
+                ...state,
+                coinbaseAuth: action.coinbaseAuth
             }
     default:
         return {

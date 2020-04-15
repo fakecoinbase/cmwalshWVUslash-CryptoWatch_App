@@ -49,6 +49,8 @@ import TickersPage from './pages/TickersPage';
 import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
+import { setAccessToken, setCoinbaseAuth } from './store/actions/coinbaseActions';
+import Axios from 'axios';
 
 const Routes: React.FC = () => {
 
@@ -84,11 +86,32 @@ const MenuApp: React.FC = () => {
 
 const TabsApp: React.FC = () => {
   const user = useSelector((state: any) => state.firebase.user)
+  const dispatch = useDispatch() 
+
+  const coinbaseAuth = (code:any) => {
+    Axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
+      .then(res => {
+          console.log(res);
+          console.log(res.data);
+          dispatch(setCoinbaseAuth(true))
+          dispatch(setAccessToken(res.data.authToken))
+          return true
+      }).catch((err) => {
+        console.log(err)
+        return false
+      })
+
+  }
 
   return (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet id="main">
+          <Route path="/redirect" render={async (props) => {
+            const auth = await coinbaseAuth(props.location.search.replace('?code=',''))
+            return <Redirect exact to={"/holdings"} />
+            }
+          } exact={true} />
           <Route path="/landing" component={LandingPage} exact={true} />
           <Route path="/news" component={NewsPage} />
           <Route path="/" render={() => <Redirect to="/news" />} exact={true} />

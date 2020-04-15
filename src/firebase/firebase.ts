@@ -159,6 +159,14 @@ export async function getDailyHoldingsHistory(userId: string) {
     return top20
 }
 
+export const updateCoinbaseHolding = (holding: any, userId: string) => {
+    firestore.collection('cbHoldings').doc(userId).collection('cbHoldings').doc(holding.currency).set({ holding }).then(() => {
+       return true
+    }).catch((err) => {
+        console.log(err)
+    })
+}
+
 export async function getHistoricalCyrptoPrices(ticker: string) {
     const priceHistory = firestore.collection('priceData').doc("priceHistory").collection(ticker).orderBy('timeStamp', 'desc').limit(100).get()
         .then(async res => {

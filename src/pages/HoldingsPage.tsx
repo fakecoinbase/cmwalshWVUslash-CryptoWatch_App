@@ -1,8 +1,8 @@
 import { RouteComponentProps } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
-import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout } from "../firebase/firebase";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton, IonFabList } from "@ionic/react";
+import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout, updateCoinbaseHolding } from "../firebase/firebase";
 import numbro from "numbro";
 import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
 import Holding from "../models/Holding";
@@ -16,6 +16,7 @@ import { add, logOut } from "ionicons/icons";
 import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
+import Axios from "axios";
  
 interface OwnProps extends RouteComponentProps {}
 
@@ -25,6 +26,8 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
 
     const [showTransactionModal, setShowTransactionModal] = useState(false)
     const [segment, setSegment] = useState<"list" | "charts">("list")
+    const [loadingWallets, setLoadingWallets] = useState(false)
+    const [wallets, setWallets] = useState([])
 
     const holdingsHistory = useSelector((state: any) => state.firebase.holdingsHistory)
     const currentPrices = useSelector((state: any) => state.prices.currentPrices)
@@ -32,6 +35,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     const additionalHoldings = useSelector((state: any) => state.coinbase.additionalHoldings)
     const lastUpdated = useSelector((state: any) => state.coinbase.lastUpdated)
     const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
+    const accessToken = useSelector((state: any) => state.coinbase.accessToken)
 
     const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
@@ -245,7 +249,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                         colors: useDarkMode ? '#C0C0C0' : '#000000'
                     },
                     formatter: function (value: any) {
-                        return moment(value).format('l hh:mm a')
+                        return moment(value).format('LT')
                     }
                 },
                 type: 'datetime',
@@ -295,6 +299,25 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
         }
         return priceData
     }   
+
+    const getWallets = () => {
+        if (user && accessToken) {
+            const headers = {'Authorization': 'Bearer ' + accessToken }
+            setLoadingWallets(true)
+            Axios.get('https://us-central1-crypto-watch-dbf71.cloudfunctions.net/walletHodl', {headers})
+            .then(response => {
+                // console.log(response.data);
+                setLoadingWallets(false)
+                setWallets(response.data)
+                for (let i = 0; i < response.data.length; i++) {
+                updateCoinbaseHolding(response.data[i].balance, user.uid)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    }
 
     function refresh(event: CustomEvent<RefresherEventDetail>) {
         if (user) {
@@ -350,6 +373,16 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                     <div className={"last-updated-time"}>
                         Last Updated: {lastUpdated.format("llll")}
                     </div>
+                    { accessToken ?
+                        <IonButton size="small" onClick={() => getWallets()}>
+                            Sync Wallets
+                        </IonButton>
+                    :
+                        <IonButton size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
+                            Sign In With Coinbase
+                        </IonButton>
+                    }
+                    
                 </IonCard>
                 {isPlatform("mobile") ?
                     <IonSegment value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
