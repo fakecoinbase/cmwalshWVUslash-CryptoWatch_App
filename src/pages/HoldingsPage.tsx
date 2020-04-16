@@ -427,7 +427,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                             Sync Wallets
                         </IonButton>
                     : signingIn ?
-                        <IonButton disabled size="small">
+                        <IonButton size="small">
                             Signing In...
                         </IonButton>
                     :
