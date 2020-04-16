@@ -72,22 +72,9 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     const coinbaseAuth = async (code:any) => {
         console.log(code)
 
-       const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
+        const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
         dispatch(setCoinbaseAuth(response.data !== null))
         dispatch(setAccessToken(response.data))
-             
-        // axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
-        //   .then(res => {
-        //       console.log(res);
-        //       console.log(res.data);
-        //       dispatch(setCoinbaseAuth(true))
-        //       dispatch(setAccessToken(res.data.authToken))
-        //       return true
-        //   }).catch((err) => {
-        //     console.log(err)
-        //     return false
-        //   })
-    
     }
 
     const logOut = () => {
@@ -328,13 +315,12 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         if (user && accessToken) {
             const headers = {'Authorization': 'Bearer ' + accessToken }
             setLoadingWallets(true)
-            axios.get('https://us-central1-crypto-watch-dbf71.cloudfunctions.net/walletHodl', {headers})
+            axios.get(`https://mighty-dawn-74394.herokuapp.com/wallets`, {headers})
             .then(response => {
-                // console.log(response.data);
                 setLoadingWallets(false)
                 setWallets(response.data)
                 for (let i = 0; i < response.data.length; i++) {
-                updateCoinbaseHolding(response.data[i].balance, user.uid)
+                    updateCoinbaseHolding(response.data[i].balance, user.uid)
                 }
             })
             .catch(error => {
