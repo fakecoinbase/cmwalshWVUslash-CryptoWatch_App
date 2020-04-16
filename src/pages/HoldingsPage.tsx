@@ -313,9 +313,9 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
 
     const getWallets = () => {
         if (user && accessToken) {
-            const headers = {'Authorization': 'Bearer ' + accessToken }
+            // const headers = {'Authorization': 'Bearer ' + accessToken }
             setLoadingWallets(true)
-            axios.get(`https://mighty-dawn-74394.herokuapp.com/wallets`, {headers})
+            axios.get(`https://mighty-dawn-74394.herokuapp.com/wallets?code=${accessToken}`)
             .then(response => {
                 setLoadingWallets(false)
                 setWallets(response.data)
