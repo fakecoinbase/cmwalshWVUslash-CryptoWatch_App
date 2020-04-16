@@ -108,12 +108,12 @@ const TabsApp: React.FC = () => {
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet id="main">
-          <Route path="/redirect" render={async (props) => {
+          <Route path="/redirect" render={(props) => {
             console.log(props.location.search)
             coinbaseAuth(props.location.search.replace('?code=',''))
             return <Redirect exact to={"/holdings"} />
             }
-          } exact={true} />
+          }/>
           <Route path="/landing" component={LandingPage} exact={true} />
           <Route path="/news" component={NewsPage} />
           <Route path="/" render={() => <Redirect to="/news" />} exact={true} />
