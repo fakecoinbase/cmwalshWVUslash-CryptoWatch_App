@@ -67,7 +67,9 @@ const Routes: React.FC = () => {
       } />
       <Route path="/signup" component={Signup} />
       <Route path="/tickers" component={TickersPage} />
-      <Route path="/holdings" component={HoldingsPage} />
+      <Route path="/holdings" render={(props) =>  {
+        return <HoldingsPage urlProps={props.location.search} />}
+        } />
       <Route path="/account" component={AccountPage} />
     </IonRouterOutlet>
   )
@@ -125,7 +127,9 @@ const TabsApp: React.FC = () => {
           } />
           <Route path="/signup" component={Signup} />
           <Route path="/tickers" component={TickersPage} />
-          <Route path="/holdings" render={(props) =>  <HoldingsPage urlProps={props.location.search} />} />
+          <Route path="/holdings" render={(props) =>  {
+            return <HoldingsPage urlProps={props.location.search} />}
+           } />
           <Route path="/account" component={AccountPage} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
