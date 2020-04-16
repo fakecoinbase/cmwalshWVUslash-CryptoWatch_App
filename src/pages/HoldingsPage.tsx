@@ -63,9 +63,31 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     }, []);
 
     useEffect(() => {
+        if (user) {
+            dispatch(setLoadingHoldings(true))
+            getTopCryptos().then((resp) => {
+                dispatch(updateCurrentPrices(resp));
+            }).catch(err => console.log(err));
+            getDailyHoldingsHistory(user.uid).then((resp: any) => {
+                dispatch(setHoldingsHistory(resp))
+            })
+            getCoinbaseHoldings(user.uid).then((resp:any) => {
+                dispatch(setCoinbaseHoldings(resp))
+            })
+            getAdditionalHoldings(user.uid).then((resp:any) => {
+                dispatch(setAdditionalHoldings(resp))
+            })
+            dispatch(setLoadingHoldings(false))
+        } else {
+            history.push("/landing")
+        }
+    }, [wallets]);
+
+    useEffect(() => {
         if (urlProps) {
             console.log(urlProps)
             coinbaseAuth(urlProps.replace('?code=',''))
+            history.push('/holdings')
         }
     }, [urlProps]);
 
