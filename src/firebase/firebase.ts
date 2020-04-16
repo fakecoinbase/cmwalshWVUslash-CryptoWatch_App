@@ -236,7 +236,7 @@ export const recordTransaction = async (transaction: any, userId: string) => {
             const top20 = await firestore.collection('top').doc('top20').get()
                 .then(doc => {
                     if (!doc.exists) {
-                        return axios.get('https://mighty-dawn-74394.herokuapp.com//top')
+                        return axios.get('https://mighty-dawn-74394.herokuapp.com/top')
                             .then(response => {
                                 return response.data.data
                             }).catch(error => {
@@ -250,7 +250,7 @@ export const recordTransaction = async (transaction: any, userId: string) => {
                 })
                 .catch(err => {
                     console.log(err)
-                    return axios.get('https://mighty-dawn-74394.herokuapp.com//top')
+                    return axios.get('https://mighty-dawn-74394.herokuapp.com/top')
                         .then(response => {
                             return response.data.data
                         }).catch(error => console.log(error)

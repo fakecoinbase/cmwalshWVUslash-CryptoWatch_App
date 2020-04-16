@@ -69,21 +69,26 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         }
     }, [urlProps]);
 
-    const coinbaseAuth = (code:any) => {
+    const coinbaseAuth = async (code:any) => {
         console.log(code)
-        axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
-          .then(res => {
-              console.log(res);
-              console.log(res.data);
-              dispatch(setCoinbaseAuth(true))
-              dispatch(setAccessToken(res.data.authToken))
-              return true
-          }).catch((err) => {
-            console.log(err)
-            return false
-          })
+
+       const accessToken =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
+        dispatch(setCoinbaseAuth(accessToken !== null))
+        dispatch(setAccessToken(accessToken))
+             
+        // axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
+        //   .then(res => {
+        //       console.log(res);
+        //       console.log(res.data);
+        //       dispatch(setCoinbaseAuth(true))
+        //       dispatch(setAccessToken(res.data.authToken))
+        //       return true
+        //   }).catch((err) => {
+        //     console.log(err)
+        //     return false
+        //   })
     
-      }
+    }
 
     const logOut = () => {
         signout().then(() =>  {
