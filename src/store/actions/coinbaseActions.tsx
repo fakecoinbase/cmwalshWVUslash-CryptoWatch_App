@@ -25,3 +25,7 @@ export const setAccessToken = (accessToken: any) => {
 export const setCoinbaseAuth = (coinbaseAuth: any) => {
     return { type: 'SET_COINBASE_AUTH', coinbaseAuth}
 };
+
+export const setSigningIn = (signingIn: any) => {
+    return { type: 'SET_SIGNING_IN', signingIn}
+};

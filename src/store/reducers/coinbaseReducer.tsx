@@ -8,7 +8,8 @@ const initData = {
     lastUpdated: moment(),
     holdingsList: [],
     accessToken: null,
-    coinbaseAuth: false
+    coinbaseAuth: false,
+    signingIn: false
 }
 
 const coinbaseReducer = ( state = initData, action: any ) => {
@@ -49,6 +50,11 @@ switch (action.type) {
             return {
                 ...state,
                 coinbaseAuth: action.coinbaseAuth
+            }
+    case 'SET_SIGNING_IN':
+            return {
+                ...state,
+                signingIn: action.signingIn
             }
     default:
         return {

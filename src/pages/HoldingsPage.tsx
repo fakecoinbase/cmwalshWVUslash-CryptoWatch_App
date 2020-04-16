@@ -6,7 +6,7 @@ import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, ge
 import numbro from "numbro";
 import { setHoldingsHistory } from "../store/actions/firebaseActions";
 import Holding from "../models/Holding";
-import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList, setCoinbaseAuth, setAccessToken } from "../store/actions/coinbaseActions";
+import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList, setCoinbaseAuth, setAccessToken, setSigningIn } from "../store/actions/coinbaseActions";
 import { updateCurrentPrices } from "../store/actions/currentPricesActions";
 import HoldingsChart from "../components/HoldingsChart";
 import HoldingsHistoryChart from "../components/HoldingsHistoryChart";
@@ -36,6 +36,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     const lastUpdated = useSelector((state: any) => state.coinbase.lastUpdated)
     const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
     const accessToken = useSelector((state: any) => state.coinbase.accessToken)
+    const signingIn = useSelector((state: any) => state.coinbase.signingIn)
 
     const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
@@ -115,9 +116,11 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
 
     const coinbaseAuth = async (code:any) => {
         console.log(code)
+        dispatch(setSigningIn(true))
         const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
         dispatch(setCoinbaseAuth(response.data !== null))
         dispatch(setAccessToken(response.data))
+        dispatch(setSigningIn(false))
     }
 
     const getWallets = () => {
@@ -422,6 +425,10 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                     { accessToken ?
                         <IonButton size="small" onClick={() => getWallets()}>
                             Sync Wallets
+                        </IonButton>
+                    : signingIn ?
+                        <IonButton disabled size="small">
+                            Signing In...
                         </IonButton>
                     :
                         <IonButton size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
