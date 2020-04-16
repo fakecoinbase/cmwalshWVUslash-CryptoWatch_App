@@ -16,7 +16,7 @@ import { add, logOut } from "ionicons/icons";
 import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
-import Axios from "axios";
+import axios from "axios";
  
 interface OwnProps extends RouteComponentProps {}
 
@@ -304,7 +304,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
         if (user && accessToken) {
             const headers = {'Authorization': 'Bearer ' + accessToken }
             setLoadingWallets(true)
-            Axios.get('https://us-central1-crypto-watch-dbf71.cloudfunctions.net/walletHodl', {headers})
+            axios.get('https://us-central1-crypto-watch-dbf71.cloudfunctions.net/walletHodl', {headers})
             .then(response => {
                 // console.log(response.data);
                 setLoadingWallets(false)

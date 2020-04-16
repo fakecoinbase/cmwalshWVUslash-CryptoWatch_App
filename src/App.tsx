@@ -50,7 +50,7 @@ import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
 import { setAccessToken, setCoinbaseAuth } from './store/actions/coinbaseActions';
-import Axios from 'axios';
+import axios from 'axios';
 
 const Routes: React.FC = () => {
 
@@ -89,7 +89,8 @@ const TabsApp: React.FC = () => {
   const dispatch = useDispatch() 
 
   const coinbaseAuth = (code:any) => {
-    Axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
+    console.log(code)
+    axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
       .then(res => {
           console.log(res);
           console.log(res.data);
@@ -108,7 +109,8 @@ const TabsApp: React.FC = () => {
       <IonTabs>
         <IonRouterOutlet id="main">
           <Route path="/redirect" render={async (props) => {
-            const auth = await coinbaseAuth(props.location.search.replace('?code=',''))
+            console.log(props.location.search)
+            coinbaseAuth(props.location.search.replace('?code=',''))
             return <Redirect exact to={"/holdings"} />
             }
           } exact={true} />
