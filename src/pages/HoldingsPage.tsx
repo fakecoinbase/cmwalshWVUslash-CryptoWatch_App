@@ -1,4 +1,4 @@
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton, IonFabList } from "@ionic/react";
@@ -6,7 +6,7 @@ import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, ge
 import numbro from "numbro";
 import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
 import Holding from "../models/Holding";
-import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList } from "../store/actions/coinbaseActions";
+import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList, setCoinbaseAuth, setAccessToken } from "../store/actions/coinbaseActions";
 import { updateCurrentPrices } from "../store/actions/currentPricesActions";
 import HoldingsChart from "../components/HoldingsChart";
 import HoldingsHistoryChart from "../components/HoldingsHistoryChart";
@@ -18,9 +18,11 @@ import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
 import axios from "axios";
  
-interface OwnProps extends RouteComponentProps {}
+interface OwnProps extends RouteComponentProps {
+    urlProps: any
+}
 
-const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
+const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     
     const mode = getConfig()!.get('mode')
 
@@ -61,10 +63,27 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     }, []);
 
     useEffect(() => {
-        if (user) {
-
+        if (urlProps) {
+            console.log(urlProps)
+            coinbaseAuth(urlProps.replace('?code=',''))
         }
-    }, [currentPrices]);
+    }, [urlProps]);
+
+    const coinbaseAuth = (code:any) => {
+        console.log(code)
+        axios.post(`https://us-central1-crypto-watch-dbf71.cloudfunctions.net/tokenHodl`, { 'code': code })
+          .then(res => {
+              console.log(res);
+              console.log(res.data);
+              dispatch(setCoinbaseAuth(true))
+              dispatch(setAccessToken(res.data.authToken))
+              return true
+          }).catch((err) => {
+            console.log(err)
+            return false
+          })
+    
+      }
 
     const logOut = () => {
         signout().then(() =>  {
@@ -432,4 +451,4 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     );
   };
 
-  export default HoldingsPage;
+  export default withRouter(HoldingsPage);
