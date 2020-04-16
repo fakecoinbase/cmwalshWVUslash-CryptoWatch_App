@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import '../theme/card.scss';
 import { IonCard, IonCardContent, IonCardTitle, IonRow, IonCol, IonItem, IonAvatar, IonLabel } from '@ionic/react';
 import numbro from 'numbro'
@@ -9,7 +9,6 @@ import { getHistoricalCyrptoPrices } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGraphData } from '../store/actions/graphActions';
 import './ticker.scss';
-import { isPlatform } from '@ionic/core';
 
 interface TickerProps { 
     crypto: any;
@@ -19,8 +18,6 @@ interface TickerProps {
 }
 
 const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
-    const [chartOpen, setChartOpen] = useState(true)
-
     const prices = useSelector((state: any) => state.graphData[ticker])
     const dispatch = useDispatch()
 
@@ -71,7 +68,6 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
             },
             tooltip: {
                 enabled: useCards,
-
                 x: {
                     show: false,
                 },
@@ -93,7 +89,6 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
             },
             yaxis: {
                 floating:true,
-                opposite: true,
                 labels: {
                     style: {
                         colors: '#2E93fA'
@@ -284,7 +279,6 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
         height: 60px;
         border-color: red;
     `;
-    const s = series()
 
     const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 

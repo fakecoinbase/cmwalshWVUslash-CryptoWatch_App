@@ -9,16 +9,10 @@ import {
   IonTabButton,
   IonTabs,
   IonSpinner,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonButton,
-  IonMenuButton,
   isPlatform
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { cashOutline, personOutline, newspaperOutline, statsChartOutline, menu } from 'ionicons/icons';
+import { cashOutline, personOutline, newspaperOutline, statsChartOutline } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -50,7 +44,6 @@ import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
 import { setAccessToken, setCoinbaseAuth, setHoldingsMap, setAdditionalHoldings, setCoinbaseHoldings, setHoldingsList } from './store/actions/coinbaseActions';
-import axios from 'axios';
 
 const Routes: React.FC = () => {
 

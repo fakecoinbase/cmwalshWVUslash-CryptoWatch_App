@@ -1,10 +1,10 @@
-import { RouteComponentProps, withRouter, Redirect } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton, IonFabList } from "@ionic/react";
-import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout, updateCoinbaseHolding } from "../firebase/firebase";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
+import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, updateCoinbaseHolding } from "../firebase/firebase";
 import numbro from "numbro";
-import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
+import { setHoldingsHistory } from "../store/actions/firebaseActions";
 import Holding from "../models/Holding";
 import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList, setCoinbaseAuth, setAccessToken } from "../store/actions/coinbaseActions";
 import { updateCurrentPrices } from "../store/actions/currentPricesActions";
@@ -12,7 +12,7 @@ import HoldingsChart from "../components/HoldingsChart";
 import HoldingsHistoryChart from "../components/HoldingsHistoryChart";
 import moment from 'moment'
 import { isPlatform, RefresherEventDetail } from "@ionic/core";
-import { add, logOut } from "ionicons/icons";
+import { add } from "ionicons/icons";
 import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
@@ -24,8 +24,6 @@ interface OwnProps extends RouteComponentProps {
 
 const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     
-    const mode = getConfig()!.get('mode')
-
     const [showTransactionModal, setShowTransactionModal] = useState(false)
     const [segment, setSegment] = useState<"list" | "charts">("list")
     const [loadingWallets, setLoadingWallets] = useState(false)
@@ -41,6 +39,14 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
 
     const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
+
+    useEffect(() => {
+        setInterval(() =>  getTopCryptos().then((resp) => {
+            dispatch(updateCurrentPrices(resp));
+        }).catch(err => console.log(err)), 900000);
+    }, [])
+
+
     useEffect(() => {
         if (user) {
             dispatch(setLoadingHoldings(true))
@@ -84,6 +90,22 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     }, [wallets]);
 
     useEffect(() => {
+        if (user) {
+            getDailyHoldingsHistory(user.uid).then((resp: any) => {
+                dispatch(setHoldingsHistory(resp))
+            })
+            getCoinbaseHoldings(user.uid).then((resp:any) => {
+                dispatch(setCoinbaseHoldings(resp))
+            })
+            getAdditionalHoldings(user.uid).then((resp:any) => {
+                dispatch(setAdditionalHoldings(resp))
+            })
+        } else {
+            history.push("/landing")
+        }
+    }, [currentPrices]);
+
+    useEffect(() => {
         if (urlProps) {
             console.log(urlProps)
             coinbaseAuth(urlProps.replace('?code=',''))
@@ -93,17 +115,27 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
 
     const coinbaseAuth = async (code:any) => {
         console.log(code)
-
         const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
         dispatch(setCoinbaseAuth(response.data !== null))
         dispatch(setAccessToken(response.data))
     }
 
-    const logOut = () => {
-        signout().then(() =>  {
-            dispatch(setUserState(null))
-            history.push("/landing")
-        })
+    const getWallets = () => {
+        if (user && accessToken) {
+            // const headers = {'Authorization': 'Bearer ' + accessToken }
+            setLoadingWallets(true)
+            axios.get(`https://mighty-dawn-74394.herokuapp.com/wallets?code=${accessToken}`)
+            .then(response => {
+                setLoadingWallets(false)
+                setWallets(response.data)
+                for (let i = 0; i < response.data.length; i++) {
+                    updateCoinbaseHolding(response.data[i].balance, user.uid)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
     }
 
     const calculateTotalHoldings = () => {
@@ -331,24 +363,6 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
             }
         }
         return priceData
-    }   
-
-    const getWallets = () => {
-        if (user && accessToken) {
-            // const headers = {'Authorization': 'Bearer ' + accessToken }
-            setLoadingWallets(true)
-            axios.get(`https://mighty-dawn-74394.herokuapp.com/wallets?code=${accessToken}`)
-            .then(response => {
-                setLoadingWallets(false)
-                setWallets(response.data)
-                for (let i = 0; i < response.data.length; i++) {
-                    updateCoinbaseHolding(response.data[i].balance, user.uid)
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        }
     }
 
     function refresh(event: CustomEvent<RefresherEventDetail>) {

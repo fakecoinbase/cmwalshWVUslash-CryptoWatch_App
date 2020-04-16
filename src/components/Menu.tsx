@@ -12,7 +12,7 @@ import {
     IonToolbar,
     IonToggle
   } from '@ionic/react';
-  import { analytics, book, logIn, logOut, person, personAdd, cashOutline, newspaperOutline, statsChartOutline, personOutline, logOutOutline, logInOutline, personAddOutline } from 'ionicons/icons';
+  import { cashOutline, newspaperOutline, statsChartOutline, personOutline, logOutOutline, logInOutline, personAddOutline } from 'ionicons/icons';
   import React from 'react';
   import { RouteComponentProps, withRouter } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
