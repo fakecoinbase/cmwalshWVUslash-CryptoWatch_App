@@ -1,7 +1,7 @@
 import { RouteComponentProps, withRouter } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
 import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, updateCoinbaseHolding, firebaseClient } from "../firebase/firebase";
 import numbro from "numbro";
 import { setHoldingsHistory } from "../store/actions/firebaseActions";
@@ -17,7 +17,6 @@ import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
 import axios from "axios";
-import firestor from "firebase";
  
 interface OwnProps extends RouteComponentProps {
     urlProps: any
