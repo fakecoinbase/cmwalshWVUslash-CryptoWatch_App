@@ -36,7 +36,7 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser, signout } from './firebase/firebase';
+import { getCurrentUser, signout, getTopCryptos, firebaseClient } from './firebase/firebase';
 import { setUserState, setHoldingsHistory } from './store/actions/firebaseActions';
 import NewsPage from './pages/NewsPage';
 import TickersPage from './pages/TickersPage';
@@ -44,6 +44,7 @@ import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
 import { setAccessToken, setCoinbaseAuth, setHoldingsMap, setAdditionalHoldings, setCoinbaseHoldings, setHoldingsList } from './store/actions/coinbaseActions';
+import { updateCurrentPrices } from './store/actions/currentPricesActions';
 
 const Routes: React.FC = () => {
 
@@ -149,6 +150,12 @@ const App: React.FC = () => {
       }
       setBusy(false)
     })
+    const topCryptos = firebaseClient.firestore().collection('top').doc('top20')
+    topCryptos.onSnapshot(querySnapshot => {
+        dispatch(updateCurrentPrices(querySnapshot.data()!.top20))
+    }, err => {
+        console.log(`Encountered error: ${err}`);
+    });
   }, []);
 
   return (

@@ -2,7 +2,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
-import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, updateCoinbaseHolding } from "../firebase/firebase";
+import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, updateCoinbaseHolding, firebaseClient } from "../firebase/firebase";
 import numbro from "numbro";
 import { setHoldingsHistory } from "../store/actions/firebaseActions";
 import Holding from "../models/Holding";
@@ -17,6 +17,7 @@ import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
 import axios from "axios";
+import firestor from "firebase";
  
 interface OwnProps extends RouteComponentProps {
     urlProps: any
@@ -42,27 +43,50 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     const user = useSelector((state: any) => state.firebase.user)
 
     useEffect(() => {
-        setInterval(() =>  getTopCryptos().then((resp) => {
-            dispatch(updateCurrentPrices(resp));
-        }).catch(err => console.log(err)), 900000);
-    }, [])
-
-
-    useEffect(() => {
         if (user) {
             dispatch(setLoadingHoldings(true))
-            getTopCryptos().then((resp) => {
-                dispatch(updateCurrentPrices(resp));
-            }).catch(err => console.log(err));
-            getDailyHoldingsHistory(user.uid).then((resp: any) => {
-                dispatch(setHoldingsHistory(resp))
-            })
             getCoinbaseHoldings(user.uid).then((resp:any) => {
                 dispatch(setCoinbaseHoldings(resp))
             })
             getAdditionalHoldings(user.uid).then((resp:any) => {
                 dispatch(setAdditionalHoldings(resp))
             })
+            getDailyHoldingsHistory(user.uid).then((resp: any) => {
+                dispatch(setHoldingsHistory(resp))
+            })
+            const cbHoldings = firebaseClient.firestore().collection('cbHoldings').doc(user.uid).collection("cbHoldings")
+            cbHoldings.onSnapshot(querySnapshot => {
+                const holdings:any[] = []
+                querySnapshot.docs.forEach(doc => {
+                    const data = doc.data().holding
+                    if (Number(data.amount) > 0) {
+                        holdings.push(data)
+                    }
+                });
+                dispatch(setCoinbaseHoldings(holdings))
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
+            const additionalHoldings = firebaseClient.firestore().collection('holdings').doc(user.uid).collection("holdings")
+            additionalHoldings.onSnapshot(querySnapshot => {
+                const holdings:any[] = []
+                querySnapshot.docs.forEach(doc => {
+                    holdings.push(doc.data())
+                });
+                dispatch(setAdditionalHoldings(holdings))
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
+            const holdingsHistoryCollection = firebaseClient.firestore().collection('dailyHoldings').doc(user.uid).collection("holdingsHistory")
+            holdingsHistoryCollection.onSnapshot(querySnapshot => {
+                let history = holdingsHistory
+                querySnapshot.docChanges().forEach(change => {
+                    history.push(change.doc.data())
+                });
+                dispatch(setHoldingsHistory(history))
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
             dispatch(setLoadingHoldings(false))
         } else {
             history.push("/landing")

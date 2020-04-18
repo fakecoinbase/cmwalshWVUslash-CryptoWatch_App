@@ -30,7 +30,7 @@ admin.initializeApp({
     databaseURL: "https://crypto-watch-dbf71.firebaseio.com"
   });
 
-
+export const firebaseClient = firebase
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 export const adminAuth = admin.auth();
