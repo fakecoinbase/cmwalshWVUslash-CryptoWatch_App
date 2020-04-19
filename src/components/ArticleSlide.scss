@@ -31,12 +31,17 @@
         flex-direction: column;
         justify-content: space-between;
 
-        .slide-article-link {
-            display: flex;
-            align-items: flex-end;
-            width: 100%;
-            margin-top: auto;
-        }
+    }
+
+    .slide-header {
+        padding: 10px;
+    }
+
+    .slide-article-link {
+        justify-content: center;
+        display: flex;
+        width: 100%;
+        margin-top: auto;
     }
 }
 
