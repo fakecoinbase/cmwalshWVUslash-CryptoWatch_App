@@ -13,7 +13,7 @@ interface HoldingsChartProps {
 const HoldingsHistoryChart: React.FC<HoldingsChartProps> = ({ total, options, series }) => {
 
     return (
-        <IonCard className={"card ion-padding"}>
+        <IonCard className={"history-chart card ion-padding"}>
             <Chart options={options} type="area" 
                 series={[{
                     data: series,

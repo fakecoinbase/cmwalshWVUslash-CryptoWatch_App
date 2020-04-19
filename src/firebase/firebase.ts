@@ -30,7 +30,7 @@ admin.initializeApp({
     databaseURL: "https://crypto-watch-dbf71.firebaseio.com"
   });
 
-
+export const firebaseClient = firebase
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 export const adminAuth = admin.auth();
@@ -159,6 +159,14 @@ export async function getDailyHoldingsHistory(userId: string) {
     return top20
 }
 
+export const updateCoinbaseHolding = (holding: any, userId: string) => {
+    firestore.collection('cbHoldings').doc(userId).collection('cbHoldings').doc(holding.currency).set({ holding }).then(() => {
+       return true
+    }).catch((err) => {
+        console.log(err)
+    })
+}
+
 export async function getHistoricalCyrptoPrices(ticker: string) {
     const priceHistory = firestore.collection('priceData').doc("priceHistory").collection(ticker).orderBy('timeStamp', 'desc').limit(100).get()
         .then(async res => {
@@ -228,7 +236,7 @@ export const recordTransaction = async (transaction: any, userId: string) => {
             const top20 = await firestore.collection('top').doc('top20').get()
                 .then(doc => {
                     if (!doc.exists) {
-                        return axios.get('https://mighty-dawn-74394.herokuapp.com//top')
+                        return axios.get('https://mighty-dawn-74394.herokuapp.com/top')
                             .then(response => {
                                 return response.data.data
                             }).catch(error => {
@@ -242,7 +250,7 @@ export const recordTransaction = async (transaction: any, userId: string) => {
                 })
                 .catch(err => {
                     console.log(err)
-                    return axios.get('https://mighty-dawn-74394.herokuapp.com//top')
+                    return axios.get('https://mighty-dawn-74394.herokuapp.com/top')
                         .then(response => {
                             return response.data.data
                         }).catch(error => console.log(error)

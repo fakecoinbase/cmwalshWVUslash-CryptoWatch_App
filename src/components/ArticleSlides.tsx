@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { IonCard, IonCardContent, IonContent, IonList, IonGrid, IonRow, IonCol } from '@ionic/react';
-import Article from './NewArticle';
+import { IonCard, IonCardContent, IonContent, IonList, IonGrid, IonRow, IonCol, IonSlides, IonSlide } from '@ionic/react';
+import Article from './ArticleSlide';
 import Pusher from 'pusher-js';
 import pushid from 'unique-push-id';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ interface Props {
     news: any[]
 } 
   
-const ArticleList: React.FC<Props> = ({ news }) => {
+const ArticleListSlides: React.FC<Props> = ({ news }) => {
     const newsFeed = useSelector((state: any) => state.news.newsArticles)
     const dispatch = useDispatch()
 
@@ -58,9 +58,9 @@ const ArticleList: React.FC<Props> = ({ news }) => {
                         return a.published_on < b.published_on ? 1 : -1
                     }
                 }).map((article, index)  => (
-                    <IonCol className="article-col" size="12" size-md="3" size-sm="4" key={index}>
+                    <IonSlide>
                         <Article key={index} article={article} id={pushid()} />
-                    </IonCol>
+                    </IonSlide>
                     )
                 )
             }
@@ -68,21 +68,22 @@ const ArticleList: React.FC<Props> = ({ news }) => {
         }
     }
 
+    const slideOpts = {
+        direction: 'vertical',
+        
+    };
+      
     return (
         <IonContent>
-            <IonList className={"default-background"}>
-                <IonGrid fixed className="article-grid">
-                    <IonRow align-items-stretch>
-                    {buildList()}
-                    </IonRow>
-                </IonGrid>
-            </IonList>
+            <IonSlides options={slideOpts}>
+                {buildList()}
+            </IonSlides>
         </IonContent>
     );
 }
 
 const noData = (
-    <IonContent>
+    <IonSlide>
         <IonList className={"default-background"}>
             <IonGrid fixed>
                 <IonRow align-items-stretch>
@@ -98,7 +99,7 @@ const noData = (
                 </IonRow>
             </IonGrid>
         </IonList>
-    </IonContent>
+    </IonSlide>
     );
 
-export default ArticleList
+export default ArticleListSlides

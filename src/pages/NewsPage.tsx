@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton, IonRefresher, IonRefresherContent } from '@ionic/react';
 import ArticleList from '../components/ArticleList';
-import { RefresherEventDetail } from '@ionic/core';
+import ArticleListSlides from '../components/ArticleSlides';
+
+import { RefresherEventDetail, isPlatform } from '@ionic/core';
 
 interface OwnProps { };
 
@@ -51,7 +53,11 @@ const NewsPage: React.FC<SpeakerListProps> = ({}) => {
                     <IonRefresherContent>
                     </IonRefresherContent>
                 </IonRefresher>
-                <ArticleList news={news} />
+                {isPlatform("mobile") ? 
+                    <ArticleListSlides news={news} />
+                    :
+                    <ArticleList news={news} />
+                }
             </IonContent>
         </IonPage>
     );

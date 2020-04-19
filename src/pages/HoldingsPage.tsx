@@ -1,30 +1,33 @@
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, getConfig, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
-import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, signout } from "../firebase/firebase";
+import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonFab, IonFabButton, IonIcon, IonModal, IonButton, IonButtons, IonCard, IonCardTitle, IonRefresher, IonRefresherContent, IonMenuButton, IonSegment, IonSegmentButton } from "@ionic/react";
+import { getDailyHoldingsHistory, getCoinbaseHoldings, getAdditionalHoldings, getTopCryptos, updateCoinbaseHolding, firebaseClient } from "../firebase/firebase";
 import numbro from "numbro";
-import { setHoldingsHistory, setUserState } from "../store/actions/firebaseActions";
+import { setHoldingsHistory } from "../store/actions/firebaseActions";
 import Holding from "../models/Holding";
-import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList } from "../store/actions/coinbaseActions";
+import { setCoinbaseHoldings, setAdditionalHoldings, setHoldingsMap, setLoadingHoldings, setHoldingsList, setCoinbaseAuth, setAccessToken, setSigningIn } from "../store/actions/coinbaseActions";
 import { updateCurrentPrices } from "../store/actions/currentPricesActions";
 import HoldingsChart from "../components/HoldingsChart";
 import HoldingsHistoryChart from "../components/HoldingsHistoryChart";
 import moment from 'moment'
 import { isPlatform, RefresherEventDetail } from "@ionic/core";
-import { add, logOut } from "ionicons/icons";
+import { add } from "ionicons/icons";
 import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
+import axios from "axios";
  
-interface OwnProps extends RouteComponentProps {}
+interface OwnProps extends RouteComponentProps {
+    urlProps: any
+}
 
-const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
+const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     
-    const mode = getConfig()!.get('mode')
-
     const [showTransactionModal, setShowTransactionModal] = useState(false)
     const [segment, setSegment] = useState<"list" | "charts">("list")
+    const [loadingWallets, setLoadingWallets] = useState(false)
+    const [wallets, setWallets] = useState([])
 
     const holdingsHistory = useSelector((state: any) => state.firebase.holdingsHistory)
     const currentPrices = useSelector((state: any) => state.prices.currentPrices)
@@ -32,9 +35,63 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     const additionalHoldings = useSelector((state: any) => state.coinbase.additionalHoldings)
     const lastUpdated = useSelector((state: any) => state.coinbase.lastUpdated)
     const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
+    const accessToken = useSelector((state: any) => state.coinbase.accessToken)
+    const signingIn = useSelector((state: any) => state.coinbase.signingIn)
 
     const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
+
+    useEffect(() => {
+        if (user) {
+            dispatch(setLoadingHoldings(true))
+            getCoinbaseHoldings(user.uid).then((resp:any) => {
+                dispatch(setCoinbaseHoldings(resp))
+            })
+            getAdditionalHoldings(user.uid).then((resp:any) => {
+                dispatch(setAdditionalHoldings(resp))
+            })
+            getDailyHoldingsHistory(user.uid).then((resp: any) => {
+                dispatch(setHoldingsHistory(resp))
+            })
+            const cbHoldings = firebaseClient.firestore().collection('cbHoldings').doc(user.uid).collection("cbHoldings")
+            cbHoldings.onSnapshot(querySnapshot => {
+                const holdings:any[] = []
+                querySnapshot.docs.forEach(doc => {
+                    const data = doc.data().holding
+                    if (Number(data.amount) > 0) {
+                        holdings.push(data)
+                    }
+                });
+                dispatch(setCoinbaseHoldings(holdings))
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
+            const additionalHoldings = firebaseClient.firestore().collection('holdings').doc(user.uid).collection("holdings")
+            additionalHoldings.onSnapshot(querySnapshot => {
+                const holdings:any[] = []
+                querySnapshot.docs.forEach(doc => {
+                    holdings.push(doc.data())
+                });
+                dispatch(setAdditionalHoldings(holdings))
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
+            const holdingsHistoryCollection = firebaseClient.firestore().collection('dailyHoldings').doc(user.uid).collection("holdingsHistory")
+            holdingsHistoryCollection.onSnapshot(querySnapshot => {
+                let history = holdingsHistory
+                querySnapshot.docChanges().forEach(change => {
+                    history.push(change.doc.data())
+                });
+                dispatch(setHoldingsHistory(history))
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
+            dispatch(setLoadingHoldings(false))
+        } else {
+            history.push("/landing")
+        }
+    }, []);
+
     useEffect(() => {
         if (user) {
             dispatch(setLoadingHoldings(true))
@@ -54,19 +111,57 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
         } else {
             history.push("/landing")
         }
-    }, []);
+    }, [wallets]);
 
     useEffect(() => {
         if (user) {
-
+            getDailyHoldingsHistory(user.uid).then((resp: any) => {
+                dispatch(setHoldingsHistory(resp))
+            })
+            getCoinbaseHoldings(user.uid).then((resp:any) => {
+                dispatch(setCoinbaseHoldings(resp))
+            })
+            getAdditionalHoldings(user.uid).then((resp:any) => {
+                dispatch(setAdditionalHoldings(resp))
+            })
+        } else {
+            history.push("/landing")
         }
     }, [currentPrices]);
 
-    const logOut = () => {
-        signout().then(() =>  {
-            dispatch(setUserState(null))
-            history.push("/landing")
-        })
+    useEffect(() => {
+        if (urlProps) {
+            console.log(urlProps)
+            coinbaseAuth(urlProps.replace('?code=',''))
+            history.push('/holdings')
+        }
+    }, [urlProps]);
+
+    const coinbaseAuth = async (code:any) => {
+        console.log(code)
+        dispatch(setSigningIn(true))
+        const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
+        dispatch(setCoinbaseAuth(response.data !== null))
+        dispatch(setAccessToken(response.data))
+        dispatch(setSigningIn(false))
+    }
+
+    const getWallets = () => {
+        if (user && accessToken) {
+            // const headers = {'Authorization': 'Bearer ' + accessToken }
+            setLoadingWallets(true)
+            axios.get(`https://mighty-dawn-74394.herokuapp.com/wallets?code=${accessToken}`)
+            .then(response => {
+                setLoadingWallets(false)
+                setWallets(response.data)
+                for (let i = 0; i < response.data.length; i++) {
+                    updateCoinbaseHolding(response.data[i].balance, user.uid)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
     }
 
     const calculateTotalHoldings = () => {
@@ -245,7 +340,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                         colors: useDarkMode ? '#C0C0C0' : '#000000'
                     },
                     formatter: function (value: any) {
-                        return moment(value).format('l hh:mm a')
+                        return moment(value).format('LT')
                     }
                 },
                 type: 'datetime',
@@ -294,7 +389,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
             }
         }
         return priceData
-    }   
+    }
 
     function refresh(event: CustomEvent<RefresherEventDetail>) {
         if (user) {
@@ -350,9 +445,23 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
                     <div className={"last-updated-time"}>
                         Last Updated: {lastUpdated.format("llll")}
                     </div>
+                    { accessToken ?
+                        <IonButton size="small" onClick={() => getWallets()}>
+                            Sync Wallets
+                        </IonButton>
+                    : signingIn ?
+                        <IonButton size="small">
+                            Signing In...
+                        </IonButton>
+                    :
+                        <IonButton size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
+                            Sign In With Coinbase
+                        </IonButton>
+                    }
+                    
                 </IonCard>
                 {isPlatform("mobile") ?
-                    <IonSegment value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
+                    <IonSegment className={"holdings-segment"} value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
                         <IonSegmentButton value="list" >
                             List
                         </IonSegmentButton>
@@ -399,4 +508,4 @@ const HoldingsPage: React.FC<OwnProps> = ({ history }) => {
     );
   };
 
-  export default HoldingsPage;
+  export default withRouter(HoldingsPage);

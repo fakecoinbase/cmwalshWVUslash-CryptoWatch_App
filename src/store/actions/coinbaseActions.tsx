@@ -17,3 +17,15 @@ export const setLoadingHoldings = (loading: boolean) => {
 export const setHoldingsList = (holdingsList: any) => {
     return { type: 'SET_HOLDINGS_LIST', holdingsList}
 };
+
+export const setAccessToken = (accessToken: any) => {
+    return { type: 'SET_ACCESS_TOKEN', accessToken}
+};
+
+export const setCoinbaseAuth = (coinbaseAuth: any) => {
+    return { type: 'SET_COINBASE_AUTH', coinbaseAuth}
+};
+
+export const setSigningIn = (signingIn: any) => {
+    return { type: 'SET_SIGNING_IN', signingIn}
+};

@@ -9,16 +9,10 @@ import {
   IonTabButton,
   IonTabs,
   IonSpinner,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonButton,
-  IonMenuButton,
   isPlatform
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { cashOutline, personOutline, newspaperOutline, statsChartOutline, menu } from 'ionicons/icons';
+import { cashOutline, personOutline, newspaperOutline, statsChartOutline } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -42,13 +36,15 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser, signout } from './firebase/firebase';
-import { setUserState } from './store/actions/firebaseActions';
+import { getCurrentUser, signout, getTopCryptos, firebaseClient } from './firebase/firebase';
+import { setUserState, setHoldingsHistory } from './store/actions/firebaseActions';
 import NewsPage from './pages/NewsPage';
 import TickersPage from './pages/TickersPage';
 import HoldingsPage from './pages/HoldingsPage';
 import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
+import { setAccessToken, setCoinbaseAuth, setHoldingsMap, setAdditionalHoldings, setCoinbaseHoldings, setHoldingsList } from './store/actions/coinbaseActions';
+import { updateCurrentPrices } from './store/actions/currentPricesActions';
 
 const Routes: React.FC = () => {
 
@@ -65,7 +61,9 @@ const Routes: React.FC = () => {
       } />
       <Route path="/signup" component={Signup} />
       <Route path="/tickers" component={TickersPage} />
-      <Route path="/holdings" component={HoldingsPage} />
+      <Route path="/holdings" render={(props) =>  {
+        return <HoldingsPage urlProps={props.location.search} />}
+        } />
       <Route path="/account" component={AccountPage} />
     </IonRouterOutlet>
   )
@@ -84,6 +82,7 @@ const MenuApp: React.FC = () => {
 
 const TabsApp: React.FC = () => {
   const user = useSelector((state: any) => state.firebase.user)
+  const dispatch = useDispatch() 
 
   return (
     <IonReactRouter>
@@ -94,13 +93,23 @@ const TabsApp: React.FC = () => {
           <Route path="/" render={() => <Redirect to="/news" />} exact={true} />
           <Route path="/login" component={Login} />
           <Route path="/logout" render={() => {
+              dispatch(setHoldingsHistory([]))
+              dispatch(setHoldingsMap([]))
+              dispatch(setCoinbaseAuth(false))
+              dispatch(setAccessToken(null))
+              dispatch(setAdditionalHoldings([]))
+              dispatch(setCoinbaseHoldings([]))
+              dispatch(setHoldingsList([]))
+              dispatch(setUserState(null))
               signout()
               return <Redirect exact to={"/landing"} />
             }
           } />
           <Route path="/signup" component={Signup} />
           <Route path="/tickers" component={TickersPage} />
-          <Route path="/holdings" component={HoldingsPage} />
+          <Route path="/holdings" render={(props) =>  {
+            return <HoldingsPage urlProps={props.location.search} />}
+           } />
           <Route path="/account" component={AccountPage} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -141,6 +150,12 @@ const App: React.FC = () => {
       }
       setBusy(false)
     })
+    const topCryptos = firebaseClient.firestore().collection('top').doc('top20')
+    topCryptos.onSnapshot(querySnapshot => {
+        dispatch(updateCurrentPrices(querySnapshot.data()!.top20))
+    }, err => {
+        console.log(`Encountered error: ${err}`);
+    });
   }, []);
 
   return (
