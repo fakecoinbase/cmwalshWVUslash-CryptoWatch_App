@@ -10,6 +10,17 @@
         height: 44%;
     }
 
+    .slide-title {
+        color: #262626;
+        font-size: 24px;
+    }
+
+    .slide-title-dark {
+        color: #ffffff;
+        font-size: 24px;
+    }
+
+
     .article-slide-source {
         margin-bottom: 0px !important;
     }
@@ -19,7 +30,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        
+
         .slide-article-link {
             display: flex;
             align-items: flex-end;

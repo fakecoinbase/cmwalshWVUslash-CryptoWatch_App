@@ -461,7 +461,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                     
                 </IonCard>
                 {isPlatform("mobile") ?
-                    <IonSegment value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
+                    <IonSegment className={"holdings-segment"} value={segment} onIonChange={(e) => setSegment(e.detail.value as any)}>
                         <IonSegmentButton value="list" >
                             List
                         </IonSegmentButton>

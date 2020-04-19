@@ -2,6 +2,7 @@ import moment from "moment";
 import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent } from "@ionic/react";
 import React from "react"
 import "./ArticleSlide.scss"
+import { useSelector } from "react-redux";
 
 interface Props {
     article: any
@@ -12,14 +13,16 @@ const Article: React.FC<Props> = ({article, id}) => {
     let url = article.urlToImage !== undefined ? article.urlToImage : article.imageurl;
     const date = article.publishedAt !== undefined ? moment(article.publishedAt).format("llll") :
       moment(article.published_on * 1000).format("llll")
-    return (
+    const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
+
+      return (
         <IonCard className={"article-slide-card"} >
             <img className={"slide-article-img"} src={url} />
             <IonCardHeader>
             <IonCardSubtitle className={"article-slide-source"}>
                     {article.source_info ? article.source_info.name : article.source.name}
                 </IonCardSubtitle>
-                <IonCardTitle>
+                <IonCardTitle className={useDarkMode ? "slide-title-dark" :"slide-title"}>
                     {article.title} 
                 </IonCardTitle>
                 <IonCardSubtitle className={"article-slide-subtitle"}>
