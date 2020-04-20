@@ -38,9 +38,9 @@ const LandingPage: React.FC<OwnProps> = ({  history }) => {
               <b>WALLET?</b>
             </h4>
             <p className="flow-text grey-text text-darken-1">
-              The one App for all of your financial needs.
+              The one App for all of your HODL needs.
             <br />
-              <span style={{ fontFamily: "monospace" }}> Welcome to Wallet Watch</span>
+              <span style={{ fontFamily: "monospace" }}> Welcome to HODL Watch</span>
             </p>
             </div>
           
