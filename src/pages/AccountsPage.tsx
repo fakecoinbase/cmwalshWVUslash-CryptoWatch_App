@@ -1,4 +1,4 @@
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, Redirect } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { IonPage, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonCard, IonItem, IonList, IonMenuButton, IonInput, IonLabel, IonRow, IonCol, IonToggle, isPlatform } from "@ionic/react";
@@ -12,12 +12,22 @@ interface OwnProps extends RouteComponentProps {}
 const AccountPage: React.FC<OwnProps> = ({ history }) => {
     
     const user = useSelector((state: any) => state.firebase.user)
+    if (!user) {
+      history.push("/landing")
+    }
+
     useEffect(() => {
         if (!user) {
             history.push("/landing")
         }
     }, []);
 
+    useEffect(() => {
+      if (!user) {
+          history.push("/landing")
+      }
+    }, [user])
+  
     const dispatch = useDispatch()
     const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
@@ -164,7 +174,7 @@ const AccountPage: React.FC<OwnProps> = ({ history }) => {
                   <IonLabel>Use Dark Theme</IonLabel>
                   <IonToggle checked={useDarkMode} onClick={() => dispatch(setUseDarkMode(!useDarkMode))} />
                 </IonItem>
-                <IonItem className={useDarkMode ? "account-button" : "account-button-light"} onClick={() => signout()} routerLink="/landing" routerDirection="none">Logout</IonItem>
+                <IonItem className={useDarkMode ? "account-button" : "account-button-light"} onClick={() => <Redirect to="/logout" />} routerLink="/logout" routerDirection="none">Logout</IonItem>
               </IonList>
             </div>)
           }

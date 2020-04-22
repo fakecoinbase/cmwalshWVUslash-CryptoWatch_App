@@ -40,7 +40,9 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
 
     const dispatch = useDispatch()
     const user = useSelector((state: any) => state.firebase.user)
-
+    if (!user) {
+        history.push("/landing")
+    }
     useEffect(() => {
         if (user) {
             dispatch(setLoadingHoldings(true))
@@ -113,6 +115,12 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         }
     }, [wallets]);
 
+    useEffect(() => {
+        if (!user) {
+            history.push("/landing")
+        }
+    }, [user])
+    
     useEffect(() => {
         if (user) {
             getDailyHoldingsHistory(user.uid).then((resp: any) => {
@@ -414,6 +422,9 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         }
     }
  
+    if (!user) {
+        history.push("/landing")
+    }
     return (
         <IonPage id="landing-page">
             {isPlatform("mobile") ? 
