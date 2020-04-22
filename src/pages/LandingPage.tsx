@@ -8,13 +8,14 @@ import { useSelector } from "react-redux";
 interface OwnProps extends RouteComponentProps {}
 
 const LandingPage: React.FC<OwnProps> = ({  history }) => {
+  const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
-    const user = useSelector((state: any) => state.firebase.user)
-    useEffect(() => {
-        if (user !== null) {
-            // history.push()
-        }
-    }, []);
+  const user = useSelector((state: any) => state.firebase.user)
+  useEffect(() => {
+      if (user !== null) {
+          // history.push()
+      }
+  }, []);
     return (
       <IonPage id="landing-page">
         <IonHeader>
@@ -28,25 +29,24 @@ const LandingPage: React.FC<OwnProps> = ({  history }) => {
         <IonContent>
   
           <div className="login-logo">
-            <img src="assets/img/appicon.svg" alt="Ionic logo" />
+            <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/lightLogo.png`} alt="Ionic logo" />
           </div>
           <div className="col s12 center-align">
 
           <h4>
 
-          <span style={{ fontFamily: "monospace" }}>Whats in your {" "}</span> 
-              <b>WALLET?</b>
+          <span style={{ fontFamily: "monospace" }}>Are you {" "}</span> 
+              <b>HODLING?</b>
             </h4>
             <p className="flow-text grey-text text-darken-1">
               The one App for all of your HODL needs.
             <br />
-              <span style={{ fontFamily: "monospace" }}> Welcome to HODL Watch</span>
             </p>
             </div>
           
             <IonRow>
               <IonCol>
-                <IonButton routerLink="/login" expand="block">Login</IonButton>
+                <IonButton className={"black-text"} routerLink="/login" expand="block">Login</IonButton>
               </IonCol>
               <IonCol>
                 <IonButton routerLink="/signup" color="light" expand="block">Signup</IonButton>

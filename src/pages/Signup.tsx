@@ -4,6 +4,7 @@ import './Login.scss';
 import { RouteComponentProps } from 'react-router';
 import { toast } from '../components/toast';
 import { registerUser } from '../firebase/firebase';
+import { useSelector } from 'react-redux';
 
 
 interface OwnProps extends RouteComponentProps {}
@@ -20,6 +21,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
   const [passwordError, setPasswordError] = useState(false);
   const [password2Error, setPassword2Error] = useState(false);
   const [loading, setLoading] = useState(false)
+  const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
   const signup = async (e: React.FormEvent) => {
     setLoading(true)
@@ -78,7 +80,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
       <IonContent>
         <IonLoading message={"Registration in progress!"} duration={0} isOpen={loading} />
         <div className="login-logo">
-          <img src="assets/img/appicon.svg" alt="Ionic logo" />
+          <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/lightLogo.png`} alt="Ionic logo" />
         </div>
 
         <form noValidate onSubmit={signup}>
@@ -134,7 +136,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
 
           <IonRow>
             <IonCol>
-              <IonButton  routerLink="/login" expand="block">Login</IonButton>
+              <IonButton className={"black-text"} routerLink="/login" expand="block">Login</IonButton>
             </IonCol>
             <IonCol>
               <IonButton type="submit" routerLink="/signup" color="light" expand="block">Signup</IonButton>

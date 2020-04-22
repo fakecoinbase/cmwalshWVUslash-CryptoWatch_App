@@ -273,6 +273,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                     show: false
                 }
             },
+            colors: ['#57CC99'],
             grid: {
                 show: false,
             },
@@ -313,7 +314,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                 opposite: true,
                 labels: {
                     style: {
-                        colors: '#2E93fA'
+                        colors: useDarkMode ? '#57CC99' : '#000000'
                     },
                     align: 'right',
                     show: true,
@@ -446,15 +447,15 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                         Last Updated: {lastUpdated.format("llll")}
                     </div>
                     { accessToken ?
-                        <IonButton size="small" onClick={() => getWallets()}>
+                        <IonButton className={"coinbase-button"} size="small" onClick={() => getWallets()}>
                             Sync Wallets
                         </IonButton>
                     : signingIn ?
-                        <IonButton size="small">
+                        <IonButton className={"coinbase-button"} size="small">
                             Signing In...
                         </IonButton>
                     :
-                        <IonButton size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
+                        <IonButton className={"coinbase-button"} size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
                             Sign In With Coinbase
                         </IonButton>
                     }
@@ -501,7 +502,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
             </IonModal>
             <IonFab slot="fixed" vertical="bottom" horizontal="end">
                 <IonFabButton onClick={() => setShowTransactionModal(true)}>  
-                    <IonIcon icon={add} />
+                    <IonIcon className={"black-text"} icon={add} />
                 </IonFabButton>
             </IonFab>
         </IonPage>

@@ -52,7 +52,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                     show: false
                 }
             },   
-            // colors: ['#909090'],
+            colors: ['#57CC99'],
             // colors: [function(props: any) {
             //     console.log(props.w.config.series[0].data)
             //     console.log(props.w.config.series[0].data[props.w.config.series[0].data.length-1])
@@ -91,7 +91,7 @@ const Ticker: React.FC<TickerProps> = ({ useCards, ticker, crypto, id }) => {
                 floating:true,
                 labels: {
                     style: {
-                        colors: '#2E93fA'
+                        colors: '#B4FFD8'
                     },
                     align: 'right',
                     show: false,
