@@ -15,6 +15,7 @@ const NewTransactionDialog: React.FC<OwnProps> = ({ dimissModal }) => {
     const [coin, setCoin] = useState("")
     const [dollarAmount, setDollarAmount] = useState("")
     const [numberOfCoins, setNumberOfCoins] = useState("")
+    const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
     const user = useSelector((state: any) =>  state.firebase.user)
 
@@ -83,7 +84,7 @@ const NewTransactionDialog: React.FC<OwnProps> = ({ dimissModal }) => {
                         </div>
                 }
                 <div className={"new-transaction-buttons"} >
-                <IonButton color="primary" onClick={() => submit()}>
+                <IonButton className={useDarkMode ? "black-text" : ""} onClick={() => submit()}>
                     Submit
                 </IonButton>
                 <IonButton color="medium" onClick={dimissModal}>

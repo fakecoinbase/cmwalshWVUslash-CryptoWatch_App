@@ -8,13 +8,14 @@ import { useSelector } from "react-redux";
 interface OwnProps extends RouteComponentProps {}
 
 const LandingPage: React.FC<OwnProps> = ({  history }) => {
+  const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
-    const user = useSelector((state: any) => state.firebase.user)
-    useEffect(() => {
-        if (user !== null) {
-            // history.push()
-        }
-    }, []);
+  const user = useSelector((state: any) => state.firebase.user)
+  useEffect(() => {
+      if (user !== null) {
+          // history.push()
+      }
+  }, []);
     return (
       <IonPage id="landing-page">
         <IonHeader>
@@ -28,7 +29,7 @@ const LandingPage: React.FC<OwnProps> = ({  history }) => {
         <IonContent>
   
           <div className="login-logo">
-            <img className={"logo"} src="assets/icon/logo.png" alt="Ionic logo" />
+            <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/lightLogo.png`} alt="Ionic logo" />
           </div>
           <div className="col s12 center-align">
 

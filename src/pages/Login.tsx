@@ -4,7 +4,7 @@ import './Login.scss';
 // import { signInWithFirebase, loadUserSession, setCurrentUser } from "../data/store/actions/authActions"
 import { RouteComponentProps } from 'react-router';
 import { toast } from '../components/toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../firebase/firebase';
 import { setUserState } from '../store/actions/firebaseActions';
 
@@ -19,6 +19,7 @@ const Login: React.FC<OwnProps> = (props, { }) => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [loading, setLoading] = useState(false)
+  const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
   const dispatch = useDispatch()
 
@@ -63,7 +64,7 @@ const Login: React.FC<OwnProps> = (props, { }) => {
       <IonContent className={"ion-padding"}>
         <IonLoading message={"Authentication in progress!"} duration={0} isOpen={loading} />
         <div className="login-logo">
-          <img className={"logo"} src="assets/icon/logo.png" alt="Ionic logo" />
+          <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/lightLogo.png`} alt="Ionic logo" />
         </div>
 
         <form noValidate onSubmit={login}>
