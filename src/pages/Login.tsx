@@ -63,7 +63,7 @@ const Login: React.FC<OwnProps> = (props, { }) => {
       <IonContent className={"ion-padding"}>
         <IonLoading message={"Authentication in progress!"} duration={0} isOpen={loading} />
         <div className="login-logo">
-          <img src="assets/img/appicon.svg" alt="Ionic logo" />
+          <img className={"logo"} src="assets/icon/logo.png" alt="Ionic logo" />
         </div>
 
         <form noValidate onSubmit={login}>
@@ -96,7 +96,7 @@ const Login: React.FC<OwnProps> = (props, { }) => {
 
           <IonRow>
             <IonCol>
-              <IonButton type="submit" expand="block">Login</IonButton>
+              <IonButton className={"black-text"} type="submit" expand="block">Login</IonButton>
             </IonCol>
             <IonCol>
               <IonButton routerLink="/signup" color="light" expand="block">Signup</IonButton>

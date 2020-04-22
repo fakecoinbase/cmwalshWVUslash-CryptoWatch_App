@@ -5,6 +5,11 @@
     padding-bottom: 6px !important;
     padding-top: 10px !important;
     margin-bottom: 8px;
+
+    .coinbase-button {
+        --background: #3880ff !important;
+        color: white;
+    }
 }
 
 .holdings-segment {

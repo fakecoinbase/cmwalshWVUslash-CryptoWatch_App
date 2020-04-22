@@ -78,7 +78,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
       <IonContent>
         <IonLoading message={"Registration in progress!"} duration={0} isOpen={loading} />
         <div className="login-logo">
-          <img src="assets/img/appicon.svg" alt="Ionic logo" />
+          <img className={"logo"} src="assets/icon/logo.png" alt="Ionic logo" />
         </div>
 
         <form noValidate onSubmit={signup}>
@@ -134,7 +134,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
 
           <IonRow>
             <IonCol>
-              <IonButton  routerLink="/login" expand="block">Login</IonButton>
+              <IonButton className={"black-text"} routerLink="/login" expand="block">Login</IonButton>
             </IonCol>
             <IonCol>
               <IonButton type="submit" routerLink="/signup" color="light" expand="block">Signup</IonButton>
