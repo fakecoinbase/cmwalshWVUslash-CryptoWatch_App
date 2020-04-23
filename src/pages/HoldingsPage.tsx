@@ -281,7 +281,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                     show: false
                 }
             },
-            colors: ['#57CC99'],
+            colors: ['#3498DB'],
             grid: {
                 show: false,
             },
@@ -322,7 +322,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                 opposite: true,
                 labels: {
                     style: {
-                        colors: useDarkMode ? '#57CC99' : '#000000'
+                        colors: useDarkMode ? '#3498DB' : '#3498DB'
                     },
                     align: 'right',
                     show: true,

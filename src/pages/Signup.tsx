@@ -80,7 +80,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
       <IonContent>
         <IonLoading message={"Registration in progress!"} duration={0} isOpen={loading} />
         <div className="login-logo">
-          <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/lightLogo.png`} alt="Ionic logo" />
+          <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/logo.png`} alt="Ionic logo" />
         </div>
 
         <form noValidate onSubmit={signup}>

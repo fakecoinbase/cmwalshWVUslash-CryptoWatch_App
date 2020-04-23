@@ -64,7 +64,7 @@ const Login: React.FC<OwnProps> = (props, { }) => {
       <IonContent className={"ion-padding"}>
         <IonLoading message={"Authentication in progress!"} duration={0} isOpen={loading} />
         <div className="login-logo">
-          <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/lightLogo.png`} alt="Ionic logo" />
+          <img className={"logo"} src={useDarkMode ? `assets/icon/logo.png` : `assets/icon/logo.png`} alt="Ionic logo" />
         </div>
 
         <form noValidate onSubmit={login}>
