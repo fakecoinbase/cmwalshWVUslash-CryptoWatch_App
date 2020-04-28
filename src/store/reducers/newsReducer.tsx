@@ -14,6 +14,11 @@ switch (action.type) {
             ...state,
             newsArticles: [action.article, ...state.newsArticles]
         }
+    case 'SET_NEWS_FEED': 
+        return {
+            ...state,
+            newsArticles: [...action.articles, ...state.newsArticles]
+        }
     default:
         return {
             ...state

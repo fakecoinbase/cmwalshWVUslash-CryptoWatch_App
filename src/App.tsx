@@ -45,6 +45,8 @@ import AccountPage from './pages/AccountsPage';
 import Menu from './components/Menu';
 import { setAccessToken, setCoinbaseAuth, setHoldingsMap, setAdditionalHoldings, setCoinbaseHoldings, setHoldingsList } from './store/actions/coinbaseActions';
 import { updateCurrentPrices } from './store/actions/currentPricesActions';
+import Pusher from 'pusher-js';
+import { updateFeed, setFeed } from './store/actions/newsActions';
 
 const Routes: React.FC = () => {
 
@@ -157,6 +159,23 @@ const App: React.FC = () => {
         console.log(`Encountered error: ${err}`);
     });
   }, []);
+
+  useEffect(() => {
+    fetch('https://mighty-dawn-74394.herokuapp.com/live')
+      .then(response => response.json())
+      .then(articles => {
+          // dispatch(updateN(articles.articles))
+          dispatch(setFeed(articles))
+      }).catch(error => console.log(error));
+    const pusher = new Pusher('5994b268d4758d733605', {
+        cluster: 'us2',
+        encrypted: true
+    });
+    pusher.subscribe('news-channel').bind('update-news', (data: any) => {
+        // news.push(data.articles)
+        dispatch(updateFeed(data.articles))
+    })
+  }, [])
 
   return (
     <IonApp className={useDarkMode ? 'dark-theme' : 'light-mode'} >

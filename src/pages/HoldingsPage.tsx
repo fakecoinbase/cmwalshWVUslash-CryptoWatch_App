@@ -223,7 +223,6 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
 
     const holdingsMappingoptions = {
         chart: {
-          width: 380,
           type: 'pie',
         },
         fill: {
@@ -253,17 +252,6 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
             }
           }
         },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            // chart: {
-            //   width: 200
-            // },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }]
     };
         
     const options = () => { 
@@ -486,7 +474,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                 {!isPlatform("mobile") ?
                     <>
                         <HoldingsList total={calculateTotalHoldings()} />
-                        <div className={isPlatform('mobile') ? "" : "flex"}>
+                        <div className={isPlatform('mobile') ? "" : "holdings-charts flex"}>
                             <HoldingsHistoryChart total={calculateTotalHoldings()}
                                 series={series()[0].data}
                                 options={options()} />

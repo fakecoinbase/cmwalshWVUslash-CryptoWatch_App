@@ -22,3 +22,10 @@ export function updateFeed(data: any) {
         article: data
     }
 }
+
+export function setFeed(data: any) {
+    return {
+        type: 'SET_NEWS_FEED',
+        articles: data
+    }
+}

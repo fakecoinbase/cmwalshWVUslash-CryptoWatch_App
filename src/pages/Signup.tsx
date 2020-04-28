@@ -61,7 +61,7 @@ const Signup: React.FC<OwnProps> = (props, {setIsLoggedIn, history, setUsername:
 
       if (res) {
         toast("Registration Success!", 4000)
-        props.history.push('/tabs/holdings', {direction: 'none'});
+        props.history.push('/holdings', {direction: 'none'});
       }
       setLoading(false)
     }

@@ -15,14 +15,14 @@ const NewsPage: React.FC<SpeakerListProps> = ({}) => {
 
     const [news, setNews] = useState<any[]>([])
 
-    useEffect(() => {
-        fetch('https://mighty-dawn-74394.herokuapp.com/live')
-            .then(response => response.json())
-            .then(articles => {
-                // dispatch(updateN(articles.articles))
-                setNews(articles);
-            }).catch(error => console.log(error));
-    }, [])
+    // useEffect(() => {
+    //     fetch('https://mighty-dawn-74394.herokuapp.com/live')
+    //         .then(response => response.json())
+    //         .then(articles => {
+    //             // dispatch(updateN(articles.articles))
+    //             setNews(articles);
+    //         }).catch(error => console.log(error));
+    // }, [])
 
     function refresh(event: CustomEvent<RefresherEventDetail>) {
         fetch('https://mighty-dawn-74394.herokuapp.com/live')

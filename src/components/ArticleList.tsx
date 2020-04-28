@@ -14,16 +14,16 @@ const ArticleList: React.FC<Props> = ({ news }) => {
     const newsFeed = useSelector((state: any) => state.news.newsArticles)
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        const pusher = new Pusher('5994b268d4758d733605', {
-            cluster: 'us2',
-            encrypted: true
-        });
-        pusher.subscribe('news-channel').bind('update-news', (data: any) => {
-            // news.push(data.articles)
-            dispatch(updateFeed(data.articles))
-        })
-    }, [])
+    // useEffect(() => {
+    //     const pusher = new Pusher('5994b268d4758d733605', {
+    //         cluster: 'us2',
+    //         encrypted: true
+    //     });
+    //     pusher.subscribe('news-channel').bind('update-news', (data: any) => {
+    //         // news.push(data.articles)
+    //         dispatch(updateFeed(data.articles))
+    //     })
+    // }, [])
    
     function newArray(x: any, y: any) {
         let d: any[] = []
