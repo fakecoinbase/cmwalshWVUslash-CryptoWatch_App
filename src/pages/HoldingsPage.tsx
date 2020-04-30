@@ -17,7 +17,9 @@ import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
 import axios from "axios";
- 
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { toast } from "../components/toast";
+
 interface OwnProps extends RouteComponentProps {
     urlProps: any
 }
@@ -152,6 +154,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         dispatch(setCoinbaseAuth(response.data !== null))
         dispatch(setAccessToken(response.data))
         dispatch(setSigningIn(false))
+        toast("Successfully Authenticated with Coinbase")
     }
 
     const getWallets = () => {
@@ -410,6 +413,55 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         }
     }
  
+    function coinbaseLogin() {
+        if (isPlatform('ios') || isPlatform('android')) {
+            window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'
+        } else {
+            var browserRef = InAppBrowser.create("https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl", "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
+            let loadStart = browserRef.on('loadstart')
+            if (loadStart) {
+                loadStart.subscribe((event) => {
+                    console.log(event.url)
+                    if ((event.url).indexOf("authorize/") !== -1 && (event.url.indexOf("authorize/oauth_signin") === -1)) {
+                        console.log("found correct URL")
+                        browserRef.on("exit").subscribe((event) => {});
+                        browserRef.close();
+                        var authCode = event.url.split("authorize/")[1];
+                        console.log("auth code: " + authCode)
+                        // var parsedResponse:any = {};
+                        // for (var i = 0; i < authCode.length; i++) {
+                        //     parsedResponse[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                        // }
+                        // if (parsedResponse["access_token"] !== undefined && parsedResponse["access_token"] !== null) {
+                        coinbaseAuth(authCode)             
+                    }
+                });
+            }
+        } 
+        // browserRef.on("exit").subscribe((event) => {
+        //     toast("The Coinbase sign in flow was canceled");
+        // });
+        // browserRef.addEventListener("loadstart", (event) => {
+        //     if ((event.url).indexOf("http://localhost/callback") === 0) {
+        //         browserRef.removeEventListener("exit", (event) => {});
+        //         browserRef.close();
+        //         var responseParameters = ((event.url).split("#")[1]).split("&");
+        //         var parsedResponse = {};
+        //         for (var i = 0; i < responseParameters.length; i++) {
+        //             parsedResponse[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+        //         }
+        //         if (parsedResponse["access_token"] !== undefined && parsedResponse["access_token"] !== null) {
+        //             resolve(parsedResponse);
+        //         } else {
+        //             reject("Problem authenticating with Facebook");
+        //         }
+        //     }
+        // });
+        // browserRef.addEventListener("exit", function(event) {
+        //     reject("The Facebook sign in flow was canceled");
+        // });
+    }
+
     if (!user) {
         history.push("/landing")
     }
@@ -454,7 +506,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                             Signing In...
                         </IonButton>
                     :
-                        <IonButton className={"coinbase-button"} size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
+                        <IonButton className={"coinbase-button"} size="small" onClick={() => coinbaseLogin()}>
                             Sign In With Coinbase
                         </IonButton>
                     }
