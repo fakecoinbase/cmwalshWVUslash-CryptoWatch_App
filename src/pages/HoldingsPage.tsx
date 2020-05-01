@@ -142,19 +142,27 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     useEffect(() => {
         if (urlProps) {
             console.log(urlProps)
-            coinbaseAuth(urlProps.replace('?code=',''))
+            coinbaseAuth(urlProps.replace('?code=',''), false)
             history.push('/holdings')
         }
     }, [urlProps]);
 
-    const coinbaseAuth = async (code:any) => {
+    const coinbaseAuth = async (code:any, mobile: boolean) => {
         console.log(code)
         dispatch(setSigningIn(true))
-        const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
-        dispatch(setCoinbaseAuth(response.data !== null))
-        dispatch(setAccessToken(response.data))
-        dispatch(setSigningIn(false))
-        toast("Successfully Authenticated with Coinbase")
+        if (mobile) {
+            const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/tokenMobile?code=${code}`)
+            dispatch(setCoinbaseAuth(response.data !== null))
+            dispatch(setAccessToken(response.data))
+            dispatch(setSigningIn(false))
+            toast("Successfully Authenticated with Coinbase")
+        } else {
+            const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
+            dispatch(setCoinbaseAuth(response.data !== null))
+            dispatch(setAccessToken(response.data))
+            dispatch(setSigningIn(false))
+            toast("Successfully Authenticated with Coinbase")
+        }
     }
 
     const getWallets = () => {
@@ -414,10 +422,10 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     }
  
     function coinbaseLogin() {
-        if (isPlatform('ios') || isPlatform('android')) {
+        if (!isPlatform('capacitor')) {
             window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'
         } else {
-            var browserRef = InAppBrowser.create("https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl", "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
+            var browserRef = InAppBrowser.create("https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodlMobile", "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
             let loadStart = browserRef.on('loadstart')
             if (loadStart) {
                 loadStart.subscribe((event) => {
@@ -428,38 +436,12 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                         browserRef.close();
                         var authCode = event.url.split("authorize/")[1];
                         console.log("auth code: " + authCode)
-                        // var parsedResponse:any = {};
-                        // for (var i = 0; i < authCode.length; i++) {
-                        //     parsedResponse[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
-                        // }
-                        // if (parsedResponse["access_token"] !== undefined && parsedResponse["access_token"] !== null) {
-                        coinbaseAuth(authCode)             
+                        coinbaseAuth(authCode, true)
                     }
                 });
             }
         } 
-        // browserRef.on("exit").subscribe((event) => {
-        //     toast("The Coinbase sign in flow was canceled");
-        // });
-        // browserRef.addEventListener("loadstart", (event) => {
-        //     if ((event.url).indexOf("http://localhost/callback") === 0) {
-        //         browserRef.removeEventListener("exit", (event) => {});
-        //         browserRef.close();
-        //         var responseParameters = ((event.url).split("#")[1]).split("&");
-        //         var parsedResponse = {};
-        //         for (var i = 0; i < responseParameters.length; i++) {
-        //             parsedResponse[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
-        //         }
-        //         if (parsedResponse["access_token"] !== undefined && parsedResponse["access_token"] !== null) {
-        //             resolve(parsedResponse);
-        //         } else {
-        //             reject("Problem authenticating with Facebook");
-        //         }
-        //     }
-        // });
-        // browserRef.addEventListener("exit", function(event) {
-        //     reject("The Facebook sign in flow was canceled");
-        // });
+        
     }
 
     if (!user) {
