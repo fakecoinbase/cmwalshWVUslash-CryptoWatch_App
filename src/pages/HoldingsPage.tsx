@@ -17,7 +17,9 @@ import NewTransactionDialog from "../components/NewTransactionDialog";
 import HoldingsList from "../components/HoldingsList";
 import "./HoldingsPage.scss"
 import axios from "axios";
- 
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { toast } from "../components/toast";
+
 interface OwnProps extends RouteComponentProps {
     urlProps: any
 }
@@ -140,18 +142,27 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
     useEffect(() => {
         if (urlProps) {
             console.log(urlProps)
-            coinbaseAuth(urlProps.replace('?code=',''))
+            coinbaseAuth(urlProps.replace('?code=',''), false)
             history.push('/holdings')
         }
     }, [urlProps]);
 
-    const coinbaseAuth = async (code:any) => {
+    const coinbaseAuth = async (code:any, mobile: boolean) => {
         console.log(code)
         dispatch(setSigningIn(true))
-        const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
-        dispatch(setCoinbaseAuth(response.data !== null))
-        dispatch(setAccessToken(response.data))
-        dispatch(setSigningIn(false))
+        if (mobile) {
+            const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/tokenMobile?code=${code}`)
+            dispatch(setCoinbaseAuth(response.data !== null))
+            dispatch(setAccessToken(response.data))
+            dispatch(setSigningIn(false))
+            toast("Successfully Authenticated with Coinbase")
+        } else {
+            const response =  await axios.get(`https://mighty-dawn-74394.herokuapp.com/token?code=${code}`)
+            dispatch(setCoinbaseAuth(response.data !== null))
+            dispatch(setAccessToken(response.data))
+            dispatch(setSigningIn(false))
+            toast("Successfully Authenticated with Coinbase")
+        }
     }
 
     const getWallets = () => {
@@ -410,6 +421,29 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
         }
     }
  
+    function coinbaseLogin() {
+        if (!isPlatform('capacitor')) {
+            window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'
+        } else {
+            var browserRef = InAppBrowser.create("https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodlMobile", "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
+            let loadStart = browserRef.on('loadstart')
+            if (loadStart) {
+                loadStart.subscribe((event) => {
+                    console.log(event.url)
+                    if ((event.url).indexOf("authorize/") !== -1 && (event.url.indexOf("authorize/oauth_signin") === -1)) {
+                        console.log("found correct URL")
+                        browserRef.on("exit").subscribe((event) => {});
+                        browserRef.close();
+                        var authCode = event.url.split("authorize/")[1];
+                        console.log("auth code: " + authCode)
+                        coinbaseAuth(authCode, true)
+                    }
+                });
+            }
+        } 
+        
+    }
+
     if (!user) {
         history.push("/landing")
     }
@@ -454,7 +488,7 @@ const HoldingsPage: React.FC<OwnProps> = ({ urlProps, history }) => {
                             Signing In...
                         </IonButton>
                     :
-                        <IonButton className={"coinbase-button"} size="small" onClick={() => window.location.href ='https://us-central1-crypto-watch-dbf71.cloudfunctions.net/redirectHodl'}>
+                        <IonButton className={"coinbase-button"} size="small" onClick={() => coinbaseLogin()}>
                             Sign In With Coinbase
                         </IonButton>
                     }
