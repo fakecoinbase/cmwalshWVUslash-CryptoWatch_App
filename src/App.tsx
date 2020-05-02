@@ -47,6 +47,7 @@ import { setAccessToken, setCoinbaseAuth, setHoldingsMap, setAdditionalHoldings,
 import { updateCurrentPrices } from './store/actions/currentPricesActions';
 import Pusher from 'pusher-js';
 import { updateFeed, setFeed } from './store/actions/newsActions';
+import PrivacyPage from './pages/PrivacyPage';
 
 const Routes: React.FC = () => {
 
@@ -56,6 +57,7 @@ const Routes: React.FC = () => {
       <Route path="/news" component={NewsPage} />
       <Route path="/" render={() => <Redirect to="/news" />} exact={true} />
       <Route path="/login" component={Login} />
+      <Route path="/privacy" component={PrivacyPage} />
       <Route path="/logout" render={() => {
           signout()
           return <Redirect exact to={"/landing"} />
@@ -92,6 +94,7 @@ const TabsApp: React.FC = () => {
         <IonRouterOutlet id="main">
           <Route path="/landing" component={LandingPage} exact={true} />
           <Route path="/news" component={NewsPage} />
+          <Route path="/privacy" component={PrivacyPage} />
           <Route path="/" render={() => <Redirect to="/news" />} exact={true} />
           <Route path="/login" component={Login} />
           <Route path="/logout" render={() => {
