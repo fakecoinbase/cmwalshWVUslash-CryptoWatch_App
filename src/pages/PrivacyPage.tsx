@@ -10,12 +10,6 @@ interface OwnProps extends RouteComponentProps {}
 const PrivacyPage: React.FC<OwnProps> = ({  history }) => {
   const useDarkMode = useSelector((state: any) => state.user.useDarkMode)
 
-  const user = useSelector((state: any) => state.firebase.user)
-  useEffect(() => {
-      if (user !== null) {
-          // history.push()
-      }
-  }, []);
     return (
       <IonPage id="landing-page">
         <IonHeader>
